@@ -1,4 +1,4 @@
-package com.Medimedi
+package com.medimedi
 
 import org.junit.Test
 
