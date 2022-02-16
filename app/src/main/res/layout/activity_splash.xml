@@ -2,35 +2,31 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/black"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
-    tools:context="com.gdsc.medimedi.fragment.SplashFragment">
-
+    tools:context=".SplashActivity" >
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="168dp"
-        android:fontFamily="sans-serif-black"
-        android:text="@string/app_name_Large"
+        android:layout_marginTop="300dp"
+        android:text="Medi Medi"
         android:textColor="@color/white"
-        android:textSize="60dp"
+        android:textSize="50sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:layout_width="240dp"
-        android:layout_height="240dp"
-        android:layout_marginTop="32dp"
-        android:src="@drawable/ic_baseline_medical_services_24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:src="@drawable/ic_medicine_box"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
