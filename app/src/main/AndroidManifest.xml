@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gdsc.medimedi">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
@@ -12,6 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MediMedi">
+
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="81c3aba7c6f1be48c5f86edb41c786f7"/>
 
         <activity
             android:name=".SplashActivity"
