@@ -35,7 +35,7 @@ class TutorialFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tutorial, container, false)
+        return inflater.inflate(R.layout.fragment_manual, container, false)
     }
 
     companion object {
