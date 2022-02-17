@@ -4,11 +4,14 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.SystemClock
 import android.speech.tts.TextToSpeech
+import android.speech.tts.TextToSpeech.SUCCESS
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.gdsc.medimedi.R
 import com.gdsc.medimedi.databinding.FragmentManualBinding
 import java.util.*
@@ -17,6 +20,7 @@ class ManualFragment : Fragment(), TextToSpeech.OnInitListener {
     private var _binding: FragmentManualBinding? = null
     private val binding get() = _binding!!
     private lateinit var tts: TextToSpeech
+    lateinit var navController : NavController
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,17 +33,23 @@ class ManualFragment : Fragment(), TextToSpeech.OnInitListener {
     // onCreateView()의 리턴값이 onViewCreated()의 매개변수로 전달됨.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
 
         tts = TextToSpeech(this.context, this)
 
         // 한번 클릭하면 텍스트 모드, 더블 클릭하면 음성 모드
         binding.frameLayout.setOnClickListener(object : DoubleClickListener() {
             override fun onSingleClick() {
-                speakOut("텍스트 모드")
+                navController.navigate(R.id.action_manualFragment_to_homeFragment)
+
+                // TODO: 화면이 전환된 다음에 텍스트 모드라고 말하기
+                // 프래그먼트 간의 데이터 전달
             }
 
             override fun onDoubleClick() {
-                speakOut("음성 모드")
+                navController.navigate(R.id.action_manualFragment_to_homeFragment)
+
+                // TODO: 화면 전환된 다음에 음성 모드라고 말하기
             }
         })
 
@@ -52,7 +62,7 @@ class ManualFragment : Fragment(), TextToSpeech.OnInitListener {
 
     override fun onInit(status: Int) {
         // TTS 객체가 정상적으로 초기화 되면
-        if (status == TextToSpeech.SUCCESS) {
+        if (status == SUCCESS) {
             // TTS 언어를 한국어로 설정
             val result = tts.setLanguage(Locale.KOREA)
 

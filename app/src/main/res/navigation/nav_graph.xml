@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/manualFragment">
+
     <fragment
         android:id="@+id/manualFragment"
         android:name="com.gdsc.medimedi.fragment.ManualFragment"
@@ -12,7 +13,11 @@
         <action
             android:id="@+id/action_manualFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_manualFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.gdsc.medimedi.fragment.LoginFragment"
@@ -22,6 +27,7 @@
             android:id="@+id/action_loginFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.gdsc.medimedi.fragment.HomeFragment"
@@ -37,27 +43,32 @@
             android:id="@+id/action_homeFragment_to_alarmFragment"
             app:destination="@id/alarmFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_historyFragment2"
+            android:id="@+id/action_homeFragment_to_historyFragment"
             app:destination="@id/historyFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.gdsc.medimedi.fragment.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
+
     <fragment
         android:id="@+id/alarmFragment"
         android:name="com.gdsc.medimedi.fragment.AlarmFragment"
         android:label="fragment_alarm"
         tools:layout="@layout/fragment_alarm" />
+
     <fragment
         android:id="@+id/historyFragment"
         android:name="com.gdsc.medimedi.fragment.HistoryFragment"
         android:label="fragment_history"
         tools:layout="@layout/fragment_history" />
+
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.gdsc.medimedi.fragment.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
+
 </navigation>
