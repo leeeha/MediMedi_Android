@@ -40,11 +40,11 @@ class ManualFragment : Fragment(), TextToSpeech.OnInitListener {
         // 한번 클릭하면 텍스트 모드, 더블 클릭하면 음성 모드
         binding.frameLayout.setOnClickListener(object : DoubleClickListener() {
             override fun onSingleClick() {
-                navController.navigate(R.id.action_manualFragment_to_homeFragment)
+                navController.navigate(R.id.action_manualFragment_to_loginFragment)
             }
 
             override fun onDoubleClick() {
-                navController.navigate(R.id.action_manualFragment_to_homeFragment)
+                navController.navigate(R.id.action_manualFragment_to_loginFragment)
             }
         })
 

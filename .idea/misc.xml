@@ -15,6 +15,7 @@
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/drawable/history.xml" value="0.212" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/drawable/ic_baseline_medical_services_24.xml" value="0.136" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/drawable/ic_medicine_box.xml" value="0.195" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/drawable/ic_profile.xml" value="0.21" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/drawable/ic_visibility.xml" value="0.21" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/drawable/ic_zoom_in.xml" value="0.21" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/drawable/settings.xml" value="0.212" />
@@ -35,7 +36,7 @@
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_menu.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_search.xml" value="0.2" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_setting.xml" value="0.25364583333333335" />
-        <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_settings.xml" value="0.22546296296296298" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_settings.xml" value="0.264" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_splash.xml" value="0.25364583333333335" />
       </map>
     </option>
