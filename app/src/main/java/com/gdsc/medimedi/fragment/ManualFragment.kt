@@ -40,10 +40,14 @@ class ManualFragment : Fragment(), TextToSpeech.OnInitListener {
         // 한번 클릭하면 텍스트 모드, 더블 클릭하면 음성 모드
         binding.frameLayout.setOnClickListener(object : DoubleClickListener() {
             override fun onSingleClick() {
+                // TODO: TTS 음성 나오기 전에 이미 화면 전환이 돼버리는 문제 해결하기!!
+                speakOut("텍스트 모드")
                 navController.navigate(R.id.action_manualFragment_to_loginFragment)
             }
 
             override fun onDoubleClick() {
+                // TODO: TTS 음성 나오기 전에 이미 화면 전환이 돼버리는 문제 해결하기!!
+                speakOut("음성 모드")
                 navController.navigate(R.id.action_manualFragment_to_loginFragment)
             }
         })
