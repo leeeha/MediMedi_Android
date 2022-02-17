@@ -41,15 +41,10 @@ class ManualFragment : Fragment(), TextToSpeech.OnInitListener {
         binding.frameLayout.setOnClickListener(object : DoubleClickListener() {
             override fun onSingleClick() {
                 navController.navigate(R.id.action_manualFragment_to_homeFragment)
-
-                // TODO: 화면이 전환된 다음에 텍스트 모드라고 말하기
-                // 프래그먼트 간의 데이터 전달
             }
 
             override fun onDoubleClick() {
                 navController.navigate(R.id.action_manualFragment_to_homeFragment)
-
-                // TODO: 화면 전환된 다음에 음성 모드라고 말하기
             }
         })
 
