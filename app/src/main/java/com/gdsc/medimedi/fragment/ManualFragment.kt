@@ -1,13 +1,13 @@
 package com.gdsc.medimedi.fragment
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.SystemClock
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.gdsc.medimedi.R
 import com.gdsc.medimedi.databinding.FragmentManualBinding
@@ -26,30 +26,28 @@ class ManualFragment : Fragment(), TextToSpeech.OnInitListener {
         return binding.root
     }
 
-    // onCreateView()의 리턴값이 onViewCreated() 메소드로 전달됨.
+    // onCreateView()의 리턴값이 onViewCreated()의 매개변수로 전달됨.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         tts = TextToSpeech(this.context, this)
 
-//        // 한번 클릭하면 텍스트 모드
-//        binding.frameLayout.setOnClickListener(object : OnSingleClickListener() {
-//            override fun onSingleClick(view: View) {
-//                speakOut("텍스트 모드")
-//            }
-//        })
-//
-//        // 두번 클릭하면 음성 모드
-//        binding.frameLayout.setOnClickListener(object : OnDoubleClickListener() {
-//            override fun onDoubleClick(view: View) {
-//                speakOut("음성 모드")
-//            }
-//        })
+        // 한번 클릭하면 텍스트 모드, 더블 클릭하면 음성 모드
+        binding.frameLayout.setOnClickListener(object : DoubleClickListener() {
+            override fun onSingleClick() {
+                speakOut("텍스트 모드")
+            }
 
-//        // 길게 누르면 설명 다시 듣기
-//        binding.frameLayout.setOnLongClickListener {
-//
-//        }
+            override fun onDoubleClick() {
+                speakOut("음성 모드")
+            }
+        })
+
+        // 길게 누르면 안내음 다시 재생
+        binding.frameLayout.setOnLongClickListener {
+            speakOut(getString(R.string.app_manual))
+            return@setOnLongClickListener true
+        }
     }
 
     override fun onInit(status: Int) {
@@ -80,39 +78,44 @@ class ManualFragment : Fragment(), TextToSpeech.OnInitListener {
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "id1")
     }
 
-//    abstract class OnSingleClickListener: View.OnClickListener {
-//        companion object {
-//            private const val SINGLE_CLICK_TIME_DELTA: Long = 1000 // milliseconds
-//        }
-//        protected abstract fun onSingleClick(view: View)
-//
-//        private var lastClickTime: Long = 0
-//        override fun onClick(view: View) {
-//            val clickTime = System.currentTimeMillis()
-//            if (clickTime - lastClickTime > SINGLE_CLICK_TIME_DELTA) {
-//                onSingleClick(view)
-//            }
-//            lastClickTime = clickTime
-//        }
-//    }
-//
-//    // abstracts methods check if two clicks were registered
-//    // within a span of DOUBLE_CLICK_TIME_DELTA
-//    abstract class OnDoubleClickListener : View.OnClickListener {
-//        companion object {
-//            private const val DOUBLE_CLICK_TIME_DELTA: Long = 300 // milliseconds
-//        }
-//        abstract fun onDoubleClick(view: View)
-//
-//        private var lastClickTime: Long = 0
-//        override fun onClick(view: View) {
-//            val clickTime = System.currentTimeMillis()
-//            if (clickTime - lastClickTime < DOUBLE_CLICK_TIME_DELTA) {
-//                onDoubleClick(view)
-//            }
-//            lastClickTime = clickTime
-//        }
-//    }
+    abstract class DoubleClickListener : View.OnClickListener {
+        abstract fun onDoubleClick()
+        abstract fun onSingleClick()
+
+        companion object {
+            private const val DEFAULT_QUALIFICATION_SPAN: Long = 300
+        }
+
+        private var isSingleEvent = false
+        private val doubleClickSpanInMillis: Long = DEFAULT_QUALIFICATION_SPAN
+        private var timestampLastClick: Long
+        private val handler: Handler
+        private val runnable: Runnable
+
+        init { // 생성자
+            timestampLastClick = 0
+            handler = Handler()
+            runnable = Runnable {
+                if (isSingleEvent) {
+                    onSingleClick()
+                }
+            }
+        }
+
+        override fun onClick(v: View) {
+            // 더블 클릭
+            if (SystemClock.elapsedRealtime() - timestampLastClick < doubleClickSpanInMillis) {
+                isSingleEvent = false
+                handler.removeCallbacks(runnable)
+                onDoubleClick()
+                return
+            }else{ // 싱글 클릭
+                isSingleEvent = true
+                handler.postDelayed(runnable, DEFAULT_QUALIFICATION_SPAN)
+                timestampLastClick = SystemClock.elapsedRealtime()
+            }
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
