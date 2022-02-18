@@ -26,6 +26,11 @@
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <argument
+            android:name="tts"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 
     <fragment
@@ -51,24 +56,48 @@
         android:id="@+id/searchFragment"
         android:name="com.gdsc.medimedi.fragment.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search">
+        <argument
+            android:name="tts"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 
     <fragment
         android:id="@+id/alarmFragment"
         android:name="com.gdsc.medimedi.fragment.AlarmFragment"
         android:label="fragment_alarm"
-        tools:layout="@layout/fragment_alarm" />
+        tools:layout="@layout/fragment_alarm">
+        <argument
+            android:name="tts"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 
     <fragment
         android:id="@+id/historyFragment"
         android:name="com.gdsc.medimedi.fragment.HistoryFragment"
         android:label="fragment_history"
-        tools:layout="@layout/fragment_history" />
+        tools:layout="@layout/fragment_history">
+        <argument
+            android:name="tts"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.gdsc.medimedi.fragment.SettingsFragment"
         android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings">
+        <argument
+            android:name="tts"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 
 </navigation>

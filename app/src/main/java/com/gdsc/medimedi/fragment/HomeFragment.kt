@@ -5,13 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.gdsc.medimedi.R
 import com.gdsc.medimedi.databinding.FragmentHomeBinding
 
 // 로그인 정보 받아온 상태에서 홈 화면 진입
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), View.OnClickListener {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     lateinit var navController : NavController
@@ -26,22 +28,35 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         navController = Navigation.findNavController(view)
 
-        binding.btnCamera.setOnClickListener{
-            navController.navigate(R.id.action_homeFragment_to_searchFragment)
-        }
+        binding.btnCamera.setOnClickListener(this)
+        binding.btnAlarm.setOnClickListener(this)
+        binding.btnHistory.setOnClickListener(this)
+        binding.btnSettings.setOnClickListener(this)
+    }
 
-        binding.btnAlarm.setOnClickListener{
-            navController.navigate(R.id.action_homeFragment_to_alarmFragment)
-        }
+    override fun onClick(v: View?) {
+        when(v?.id){
+            R.id.btn_camera -> {
+                val action = HomeFragmentDirections.actionHomeFragmentToSearchFragment("약 검색하기")
+                findNavController().navigate(action)
+            }
+            R.id.btn_alarm -> {
+                val action = HomeFragmentDirections.actionHomeFragmentToAlarmFragment("약 알림받기")
+                findNavController().navigate(action)
+            }
+            R.id.btn_history -> {
+                val action = HomeFragmentDirections.actionHomeFragmentToHistoryFragment("검색 기록 조회하기")
+                findNavController().navigate(action)
+            }
+            R.id.btn_settings -> {
+                val action = HomeFragmentDirections.actionHomeFragmentToSettingsFragment("설정 화면")
+                findNavController().navigate(action)
+            }
 
-        binding.btnHistory.setOnClickListener{
-            navController.navigate(R.id.action_homeFragment_to_historyFragment)
-        }
-
-        binding.ibSettings.setOnClickListener{
-            navController.navigate(R.id.action_homeFragment_to_settingsFragment)
+            // 홈 화면에서 뒤로가기 누르면, 앱을 종료하시겠습니까? 다이얼로그 띄우기
         }
     }
 

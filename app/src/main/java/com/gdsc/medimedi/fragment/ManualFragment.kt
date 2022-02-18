@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.gdsc.medimedi.R
 import com.gdsc.medimedi.databinding.FragmentManualBinding
 import java.util.*
@@ -33,22 +34,20 @@ class ManualFragment : Fragment(), TextToSpeech.OnInitListener {
     // onCreateView()의 리턴값이 onViewCreated()의 매개변수로 전달됨.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        navController = Navigation.findNavController(view)
 
+        navController = Navigation.findNavController(view)
         tts = TextToSpeech(this.context, this)
 
         // 한번 클릭하면 텍스트 모드, 더블 클릭하면 음성 모드
         binding.frameLayout.setOnClickListener(object : DoubleClickListener() {
             override fun onSingleClick() {
-                // TODO: TTS 음성 나오기 전에 이미 화면 전환이 돼버리는 문제 해결하기!!
-                speakOut("텍스트 모드")
-                navController.navigate(R.id.action_manualFragment_to_loginFragment)
+                val action = ManualFragmentDirections.actionManualFragmentToLoginFragment("텍스트 모드")
+                findNavController().navigate(action)
             }
 
             override fun onDoubleClick() {
-                // TODO: TTS 음성 나오기 전에 이미 화면 전환이 돼버리는 문제 해결하기!!
-                speakOut("음성 모드")
-                navController.navigate(R.id.action_manualFragment_to_loginFragment)
+                val action = ManualFragmentDirections.actionManualFragmentToLoginFragment("음성 모드")
+                findNavController().navigate(action)
             }
         })
 
