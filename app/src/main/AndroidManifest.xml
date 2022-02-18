@@ -3,21 +3,24 @@
     package="com.gdsc.medimedi">
 
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- 카메라 권한 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <!-- 카메라가 있는 기기만 이 어플을 다운 받을 수 있도록 하려면 required="true" -->
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true"/>
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MediMedi">
-
-        <meta-data
-            android:name="com.kakao.sdk.AppKey"
-            android:value="81c3aba7c6f1be48c5f86edb41c786f7"/>
 
         <activity
             android:name=".SplashActivity"
@@ -31,6 +34,18 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+
+        <!-- 카메라로 사진 찍고 원본 형태를 유지하기 위해 필요한 FileProvider 구성 -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.gdsc.medimedi.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
+
     </application>
 
 </manifest>

@@ -53,4 +53,7 @@ dependencies {
     // navigation
     implementation "androidx.navigation:navigation-fragment-ktx:2.4.1"
     implementation "androidx.navigation:navigation-ui-ktx:2.4.1"
+
+    // camera
+    implementation 'gun0912.ted:tedpermission:2.2.3'
 }

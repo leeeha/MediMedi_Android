@@ -20,8 +20,9 @@ import java.util.*
 class ManualFragment : Fragment(), TextToSpeech.OnInitListener {
     private var _binding: FragmentManualBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var navController : NavController
     private lateinit var tts: TextToSpeech
-    lateinit var navController : NavController
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,29 +62,17 @@ class ManualFragment : Fragment(), TextToSpeech.OnInitListener {
     override fun onInit(status: Int) {
         // TTS 객체가 정상적으로 초기화 되면
         if (status == SUCCESS) {
-            // TTS 언어를 한국어로 설정
-            val result = tts.setLanguage(Locale.KOREA)
-
-            // 지원되는 언어가 아니거나, 언어 데이터가 누락된 경우 에러 문구 출력
-            if (result == TextToSpeech.LANG_NOT_SUPPORTED || result == TextToSpeech.LANG_MISSING_DATA) {
-                Log.e("TTS", "This Language is not supported")
-            } else {
-                tts.setPitch(0.6F) // 음성 톤 높이 지정
-                tts.setSpeechRate(1.0F) // 음성 속도 지정
-
-                // onInit에 음성 출력할 텍스트를 넣어줌
-                speakOut(getString(R.string.app_manual))
-            }
+            tts.language = Locale.KOREA // 언어 설정
+            tts.setPitch(0.6F) // 음성 톤 높이 지정
+            tts.setSpeechRate(1.0F) // 음성 속도 지정
+            speakOut(getString(R.string.app_manual))
         } else { // 초기화 실패
             Log.e("TTS", "Initialization Failed!")
         }
     }
 
     private fun speakOut(text: String) {
-        // 첫 번째 매개변수: 음성 출력을 할 텍스트
-        // 두 번째 매개변수: 1. TextToSpeech.QUEUE_FLUSH - 진행 중인 음성 출력을 끊고 이번 TTS의 음성 출력
-        //                 2. TextToSpeech.QUEUE_ADD - 진행 중인 음성 출력이 끝난 후에 이번 TTS의 음성 출력
-        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "id1")
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
     }
 
     abstract class DoubleClickListener : View.OnClickListener {
@@ -127,11 +116,8 @@ class ManualFragment : Fragment(), TextToSpeech.OnInitListener {
 
     override fun onDestroyView() {
         super.onDestroyView()
-
-        // 사용한 TTS 객체 제거
         tts.stop()
         tts.shutdown()
-
         _binding = null
     }
 }

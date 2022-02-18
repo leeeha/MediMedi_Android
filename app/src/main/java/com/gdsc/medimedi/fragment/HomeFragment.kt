@@ -20,7 +20,8 @@ import java.util.*
 class HomeFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListener{
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    lateinit var navController : NavController
+
+    private lateinit var navController : NavController
     private lateinit var tts: TextToSpeech
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +35,7 @@ class HomeFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListen
                     val alertDialog: AlertDialog = AlertDialog.Builder(activity).create()
                     alertDialog.setTitle(R.string.app_name)
                     alertDialog.setMessage("Are you sure you want to exit?")
-                    tts.speak("앱을 종료하시겠습니까?", TextToSpeech.QUEUE_FLUSH, null, "id1")
+                    speakOut("앱을 종료하시겠습니까?")
 
                     // 앱 종료
                     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes"){
@@ -96,16 +97,16 @@ class HomeFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListen
 
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
-            val result = tts.setLanguage(Locale.KOREA)
-            if (result == TextToSpeech.LANG_NOT_SUPPORTED || result == TextToSpeech.LANG_MISSING_DATA) {
-                Log.e("TTS", "This Language is not supported")
-            } else {
-                tts.setPitch(0.6F) // 음성 톤 높이 지정
-                tts.setSpeechRate(1.2F) // 음성 속도 지정
-            }
+            tts.language = Locale.KOREA
+            tts.setPitch(0.6F)
+            tts.setSpeechRate(1.2F)
         } else {
             Log.e("TTS", "Initialization Failed!")
         }
+    }
+
+    private fun speakOut(text: String) {
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
     }
 
     override fun onDestroyView() {

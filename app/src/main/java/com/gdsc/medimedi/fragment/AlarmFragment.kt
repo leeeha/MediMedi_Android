@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
+import com.gdsc.medimedi.MainActivity
 import com.gdsc.medimedi.R
 import com.gdsc.medimedi.databinding.FragmentAlarmBinding
 import com.gdsc.medimedi.databinding.FragmentSearchBinding
@@ -18,8 +19,9 @@ import java.util.*
 class AlarmFragment : Fragment(), TextToSpeech.OnInitListener  {
     private var _binding: FragmentAlarmBinding? = null
     private val binding get() = _binding!!
-    lateinit var navController : NavController
     private val args: AlarmFragmentArgs by navArgs()
+
+    private lateinit var navController : NavController
     private lateinit var tts: TextToSpeech
 
     override fun onCreateView(
@@ -32,6 +34,7 @@ class AlarmFragment : Fragment(), TextToSpeech.OnInitListener  {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         navController = Navigation.findNavController(view)
         tts = TextToSpeech(this.context, this)
 
@@ -39,22 +42,17 @@ class AlarmFragment : Fragment(), TextToSpeech.OnInitListener  {
 
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
-            val result = tts.setLanguage(Locale.KOREA)
-            if (result == TextToSpeech.LANG_NOT_SUPPORTED || result == TextToSpeech.LANG_MISSING_DATA) {
-                Log.e("TTS", "This Language is not supported")
-            } else {
-                // 전달 받은 인자값에 따라 현재 어떤 화면인지 알려줌.
-                speakOut(args.tts.toString())
-            }
+            tts.language = Locale.KOREA
+            tts.setPitch(0.6F)
+            tts.setSpeechRate(1.2F)
+            speakOut(args.tts.toString())
         } else {
             Log.e("TTS", "Initialization Failed!")
         }
     }
 
     private fun speakOut(text: String) {
-        tts.setPitch(0.6F) // 음성 톤 높이 지정
-        tts.setSpeechRate(1.2F) // 음성 속도 지정
-        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "id1")
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
     }
 
     override fun onDestroyView() {
