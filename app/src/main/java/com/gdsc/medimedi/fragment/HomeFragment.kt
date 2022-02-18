@@ -1,22 +1,57 @@
 package com.gdsc.medimedi.fragment
 
+import android.app.AlertDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
+import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.gdsc.medimedi.R
 import com.gdsc.medimedi.databinding.FragmentHomeBinding
+import java.util.*
 
 // 로그인 정보 받아온 상태에서 홈 화면 진입
-class HomeFragment : Fragment(), View.OnClickListener {
+class HomeFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListener{
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     lateinit var navController : NavController
+    private lateinit var tts: TextToSpeech
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // This callback will only be called when HomeFragment is at least started.
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    // 다이얼로그 띄우기
+                    val alertDialog: AlertDialog = AlertDialog.Builder(activity).create()
+                    alertDialog.setTitle(R.string.app_name)
+                    alertDialog.setMessage("Are you sure you want to exit?")
+                    tts.speak("앱을 종료하시겠습니까?", TextToSpeech.QUEUE_FLUSH, null, "id1")
+
+                    // 앱 종료
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes"){
+                            dialog, which -> activity?.finish()
+                    }
+
+                    // 다이얼로그 닫기
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No"){
+                            dialog, which -> dialog.dismiss()
+                    }
+
+                    alertDialog.show()
+                }
+            }
+
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,6 +65,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         navController = Navigation.findNavController(view)
+        tts = TextToSpeech(this.context, this)
 
         binding.btnCamera.setOnClickListener(this)
         binding.btnAlarm.setOnClickListener(this)
@@ -55,13 +91,27 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 val action = HomeFragmentDirections.actionHomeFragmentToSettingsFragment("설정 화면")
                 findNavController().navigate(action)
             }
+        }
+    }
 
-            // 홈 화면에서 뒤로가기 누르면, 앱을 종료하시겠습니까? 다이얼로그 띄우기
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = tts.setLanguage(Locale.KOREA)
+            if (result == TextToSpeech.LANG_NOT_SUPPORTED || result == TextToSpeech.LANG_MISSING_DATA) {
+                Log.e("TTS", "This Language is not supported")
+            } else {
+                tts.setPitch(0.6F) // 음성 톤 높이 지정
+                tts.setSpeechRate(1.2F) // 음성 속도 지정
+            }
+        } else {
+            Log.e("TTS", "Initialization Failed!")
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        tts.stop()
+        tts.shutdown()
         _binding = null
     }
 }
