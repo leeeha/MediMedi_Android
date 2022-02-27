@@ -1,9 +1,8 @@
 package com.gdsc.medimedi.retrofit
 
-import com.google.gson.annotations.SerializedName
 import retrofit2.Callback
 
-//로그인(회원가입) 클래스
+// 로그인(회원가입) 클래스
 data class LoginRequest(
     val token: String, val name: String, val email: String
 )

@@ -31,6 +31,7 @@ class HomeFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListen
         val callback: OnBackPressedCallback =
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
+
                     // 다이얼로그 띄우기
                     val alertDialog: AlertDialog = AlertDialog.Builder(activity).create()
                     alertDialog.setTitle(R.string.app_name)

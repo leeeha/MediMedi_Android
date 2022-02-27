@@ -30,7 +30,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
 
-
 @OptIn(DelicateCoroutinesApi::class)
 class LoginFragment : Fragment(), TextToSpeech.OnInitListener {
     private var _binding: FragmentLoginBinding? = null
@@ -40,7 +39,7 @@ class LoginFragment : Fragment(), TextToSpeech.OnInitListener {
     private lateinit var navController: NavController
     private lateinit var tts: TextToSpeech
 
-    //로그인
+    // 로그인
     private val RC_SIGN_IN = 10
     private var mGoogleSignInClient: GoogleSignInClient? = null
     private var account: GoogleSignInAccount? = null
@@ -49,14 +48,13 @@ class LoginFragment : Fragment(), TextToSpeech.OnInitListener {
     private var mRESTApi: RESTApi? = null
     private var token: String? = null
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
 
-        //로그인
+        // 로그인
         preferences = context?.getSharedPreferences("data", MODE_PRIVATE)
         editor = preferences!!.edit()
         mRESTApi = RESTApi.retrofit.create(RESTApi::class.java)
@@ -71,7 +69,6 @@ class LoginFragment : Fragment(), TextToSpeech.OnInitListener {
         mGoogleSignInClient!!.silentSignIn().addOnCompleteListener(this,
             OnCompleteListener<GoogleSignInAccount?> { task -> handleSignInResult(task) })
 
-
         return binding.root
     }
 
@@ -81,35 +78,27 @@ class LoginFragment : Fragment(), TextToSpeech.OnInitListener {
         navController = Navigation.findNavController(view)
         tts = TextToSpeech(this.context, this)
 
-        // 매뉴얼 화면으로 돌아가기
+        // 이전 화면으로 돌아가기
         binding.btnPrev.setOnClickListener {
             navController.popBackStack()
         }
 
-        // 로그인 성공하면, 홈 화면으로 이동
-        binding.btnHome.setOnClickListener {
-            navController.navigate(R.id.action_loginFragment_to_homeFragment)
-        }
-
+        // 로그인 버튼
         binding.signInButton.setOnClickListener {
             signIn()
             Log.d("signinbutton", "signIn")
+
+            // todo: 로그인에 성공했을 때만, 홈화면으로 넘어가도록 코드 바꿔야 해!!
+            // 아직 로그인 하지도 않았는데 홈화면이 떠버리는 문제가 생기고 있음.
             navController.navigate(R.id.action_loginFragment_to_homeFragment)
             Log.d("signinbutton", "nav")
         }
 
-        //자동로그인
+        // 자동 로그인
         val gsa = GoogleSignIn.getLastSignedInAccount(requireActivity())
         if (gsa!= null){
             navController.navigate(R.id.action_loginFragment_to_homeFragment)
             Log.d("autologin", "navigate to home")
-        }
-
-    }
-
-    fun onClick(v: View) {
-        when (v.id) {
-            R.id.sign_in_button -> signIn()
         }
     }
 
@@ -127,7 +116,6 @@ class LoginFragment : Fragment(), TextToSpeech.OnInitListener {
             Log.d("onActivityResult", "requestCode is same")
         }
     }
-
 
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
@@ -163,7 +151,6 @@ class LoginFragment : Fragment(), TextToSpeech.OnInitListener {
         }
     }
 
-
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
             tts.language = Locale.KOREA
@@ -179,23 +166,12 @@ class LoginFragment : Fragment(), TextToSpeech.OnInitListener {
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        tts.stop()
-        tts.shutdown()
-        _binding = null
+    private fun <TResult> Task<TResult>.addOnCompleteListener(
+        loginFragment: LoginFragment,
+        onCompleteListener: OnCompleteListener<TResult?>) {
+
     }
-
-
 }
-
-private fun <TResult> Task<TResult>.addOnCompleteListener(
-    loginFragment: LoginFragment,
-    onCompleteListener: OnCompleteListener<TResult?>
-) {
-
-}
-
 
 
 
