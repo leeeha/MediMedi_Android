@@ -10,10 +10,7 @@ import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
-import com.gdsc.medimedi.MainActivity
-import com.gdsc.medimedi.R
 import com.gdsc.medimedi.databinding.FragmentAlarmBinding
-import com.gdsc.medimedi.databinding.FragmentSearchBinding
 import java.util.*
 
 class AlarmFragment : Fragment(), TextToSpeech.OnInitListener  {
