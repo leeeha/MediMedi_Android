@@ -6,8 +6,8 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="50dp"
+        android:id="@+id/tv_cate"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="구분"
         android:textStyle="bold"
@@ -16,13 +16,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_description"
+        android:id="@+id/tv_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="설명~~~~~~~~~~~~~~~~~~"
+        android:text="설명"
         android:layout_marginStart="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tv_title"
+        app:layout_constraintStart_toEndOf="@+id/tv_cate"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

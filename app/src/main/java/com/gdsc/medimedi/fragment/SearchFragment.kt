@@ -19,19 +19,27 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.gdsc.medimedi.GraphicOverlay
-import com.gdsc.medimedi.R
 import com.gdsc.medimedi.databinding.FragmentSearchBinding
+import com.gdsc.medimedi.retrofit.RESTApi
+import com.gdsc.medimedi.retrofit.SearchRequest
+import com.gdsc.medimedi.retrofit.SearchResponse
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.mlkit.common.model.LocalModel
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.objects.ObjectDetection
 import com.google.mlkit.vision.objects.ObjectDetector
 import com.google.mlkit.vision.objects.custom.CustomObjectDetectorOptions
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.util.*
 import java.util.concurrent.Executors
 
-// 촬영 화면
+// 히스토리 화면에서 카메라 화면으로 돌아온 뒤에 뒤로가기 누르면,
+// 홈 화면으로 가기 전에 앱 종료됨. 프래그먼트 not attached 에러.
 class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
@@ -53,9 +61,9 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
     private lateinit var cameraSelector: CameraSelector
 
     // Use case
-    private lateinit var preview: Preview
-    private lateinit var imageAnalysis: ImageAnalysis
-    private lateinit var imageCapture: ImageCapture
+    private lateinit var previewUseCase: Preview
+    private lateinit var analysisUseCase: ImageAnalysis
+    private lateinit var captureUseCase: ImageCapture
 
     private val boxList = listOf("Packaged goods", "Box", "Business card", "Container")
 
@@ -104,7 +112,7 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
 
         // 검색 기록 조회 버튼
         binding.btnHistory.setOnClickListener{
-            val action = ResultFragmentDirections.actionResultFragmentToHistoryFragment("검색 기록 조회하기")
+            val action = SearchFragmentDirections.actionSearchFragmentToHistoryFragment("검색 기록 조회하기")
             findNavController().navigate(action)
         }
 
@@ -138,19 +146,19 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
             .build()
 
         // 1. Set up the preview use case to display camera preview.
-        preview = Preview.Builder().build()
+        previewUseCase = Preview.Builder().build()
 
         // Connect the preview use case to the previewView
-        preview.setSurfaceProvider(binding.previewView.surfaceProvider)
+        previewUseCase.setSurfaceProvider(binding.previewView.surfaceProvider)
 
         // 2. Set up the capture use case to allow users to take photos.
-        imageCapture = ImageCapture.Builder()
+        captureUseCase = ImageCapture.Builder()
             .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY) // 지연 시간 최소화 모드
             .build()
 
         // 3. Set up the analysis use case to analyze camera preview.
         val point = Point()
-        imageAnalysis = ImageAnalysis.Builder()
+        analysisUseCase = ImageAnalysis.Builder()
             // 디바이스의 화면 해상도 전달
             .setTargetResolution(Size(point.x, point.y))
             // 카메라가 너무 빨리 움직일 때 가장 최신 상태의 프레임만 얻는다.
@@ -159,7 +167,7 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
 
         // imageAnalysis를 ImageAnalyzer에게 전달하면, imageProxy가 리턴되어 카메라로부터 이미지를 얻고,
         // setAnalyzer의 매개변수로 전달된 executor는 imageProxy를 실행시킨다.
-        imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(requireContext())) { imageProxy ->
+        analysisUseCase.setAnalyzer(ContextCompat.getMainExecutor(requireContext())) { imageProxy ->
             val rotationDegrees = imageProxy.imageInfo.rotationDegrees
             val image = imageProxy.image
             if (image != null) {
@@ -203,7 +211,7 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
 
             // Attach three use cases to the camera with the same lifecycle owner
             cameraProvider.bindToLifecycle(
-                this as LifecycleOwner, cameraSelector, preview, imageAnalysis, imageCapture)
+                this as LifecycleOwner, cameraSelector, previewUseCase, analysisUseCase, captureUseCase)
 
         } catch(exc: Exception) {
             Log.e("bindToLifecycle", "Use case binding failed", exc)
@@ -217,11 +225,11 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
         file.createNewFile()
         val outputFileOptions = ImageCapture.OutputFileOptions.Builder(file).build()
 
-        imageCapture.takePicture(outputFileOptions,
+        captureUseCase.takePicture(outputFileOptions,
             Executors.newSingleThreadExecutor(),
             object: ImageCapture.OnImageSavedCallback {
                 override fun onError(exception: ImageCaptureException) {
-                    // runOnUiThread? fragment host(=Activity)의 메인 쓰레드(=UI 쓰레드)에서 호출되야 한다.
+                    // runOnUiThread? fragment host(=Activity)의 메인 쓰레드(=UI 쓰레드)에서 호출돼야 한다.
                     requireActivity().runOnUiThread{
                         Log.d(TAG, "Error: ${exception.message}")
                     }
@@ -231,7 +239,7 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
                         val imgUri = outputFileResults.savedUri
                         Log.d(TAG, "Saved successfully: $imgUri")
 
-                        // 이미지 저장에 성공하면, 결과 화면으로 넘어가기
+                        // 결과 화면으로 이미지 주소 넘기기
                         val action = SearchFragmentDirections.actionSearchFragmentToResultFragment(imgUri.toString())
                         findNavController().navigate(action)
                     }

@@ -15,9 +15,9 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.gdsc.medimedi.R
-import com.gdsc.medimedi.RESTApi
 import com.gdsc.medimedi.databinding.FragmentLoginBinding
 import com.gdsc.medimedi.retrofit.LoginRequest
+import com.gdsc.medimedi.retrofit.RESTApi
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -88,8 +88,7 @@ class LoginFragment : Fragment(), TextToSpeech.OnInitListener {
             signIn()
             Log.d("signinbutton", "signIn")
 
-            // todo: 로그인에 성공했을 때만, 홈화면으로 넘어가도록 코드 바꿔야 해!!
-            // 아직 로그인 하지도 않았는데 홈화면이 떠버리는 문제가 생기고 있음.
+            // todo: 로그인에 성공했을 때만, 홈화면으로 넘어가도록 코드 바꿔야 함.
             navController.navigate(R.id.action_loginFragment_to_homeFragment)
             Log.d("signinbutton", "nav")
         }
@@ -124,7 +123,7 @@ class LoginFragment : Fragment(), TextToSpeech.OnInitListener {
             Log.d("LoginFragment", "idToken = $idToken")
             updateUI(account)
         } catch (e: ApiException) {
-            Log.w(TAG, "signInResult:failed code=" + e.statusCode)
+            Log.w(TAG, "signInResult: failed code=" + e.statusCode)
             updateUI(null)
         }
     }
@@ -138,8 +137,9 @@ class LoginFragment : Fragment(), TextToSpeech.OnInitListener {
     }
 
     private fun doRetrofit(account: GoogleSignInAccount?) {
-        val test =
-            LoginRequest("${account?.idToken}", "${account?.displayName}", "${account?.email}")
+        val test = LoginRequest("${account?.idToken}",
+                "${account?.displayName}",
+                "${account?.email}")
         GlobalScope.launch {
             try {
                 val response = mRESTApi?.googleLogin(test)
@@ -169,7 +169,6 @@ class LoginFragment : Fragment(), TextToSpeech.OnInitListener {
     private fun <TResult> Task<TResult>.addOnCompleteListener(
         loginFragment: LoginFragment,
         onCompleteListener: OnCompleteListener<TResult?>) {
-
     }
 }
 
