@@ -37,7 +37,9 @@
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/activity_test.xml" value="0.19623770842240273" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_alarm.xml" value="0.264" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_blank.xml" value="0.20820863616930313" />
-        <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_history.xml" value="0.20820863616930313" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_detail.xml" value="0.22546296296296298" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_detail_history.xml" value="0.22546296296296298" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_history.xml" value="0.2" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_home.xml" value="0.264" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_login.xml" value="0.264" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_manual.xml" value="0.2" />
@@ -47,6 +49,7 @@
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_setting.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_settings.xml" value="0.264" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_splash.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/list_item_history.xml" value="0.22546296296296298" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/list_item_result.xml" value="0.264" />
       </map>
     </option>

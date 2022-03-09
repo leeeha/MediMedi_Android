@@ -5,11 +5,18 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterF
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface RESTApi {
+    companion object {
+        var gson = GsonBuilder().setLenient().create()
+        val retrofit: Retrofit = Retrofit.Builder()
+            .baseUrl("http://3.38.255.253:8080/api/")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addCallAdapterFactory(CoroutineCallAdapterFactory())
+            .build()
+    }
+
     @POST("user")
     fun googleLogin(@Body loginRequest: LoginRequest): Call<LoginResponse>
 
@@ -19,12 +26,9 @@ interface RESTApi {
     @POST("search")
     fun getSearchResult(@Body searchRequest: SearchRequest): Call<SearchResponse>
 
-    companion object {
-        var gson = GsonBuilder().setLenient().create()
-        val retrofit: Retrofit = Retrofit.Builder()
-            .baseUrl("http://3.38.255.253:8080/api/")
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .addCallAdapterFactory(CoroutineCallAdapterFactory())
-            .build()
-    }
+    @GET("history/list/{token}")
+    fun getSearchHistory(@Path("token") token: String?): Call<HistoryResponse>
+
+    @GET("history/detail/{id}")
+    fun getHistoryDetail(@Path("id") id: Int): Call<DetailResponse>
 }

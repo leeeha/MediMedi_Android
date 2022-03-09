@@ -36,9 +36,11 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
     private lateinit var tts: TextToSpeech
 
     // 리사이클러뷰
-    private lateinit var resultAdapter: ResultAdapter
+    private var resultAdapter = ResultAdapter()
     private val dataSet = mutableListOf<Result>()
-    private lateinit var result: String
+
+    // 음성으로 제공할 약 정보 (제품명, 효능효과, 사용법)
+    private lateinit var mediInfo: String
 
     // 레트로핏 객체 생성
     private val mRESTApi = RESTApi.retrofit.create(RESTApi::class.java)
@@ -77,14 +79,12 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
 
         // 화면 가운데를 길게 누르면, 약 설명 다시 재생
         binding.btnReplay.setOnLongClickListener{
-            speakOut(result)
+            speakOut(mediInfo)
             return@setOnLongClickListener true
         }
     }
 
     private fun initRecyclerView() {
-        resultAdapter = ResultAdapter() // 전역변수 초기화 필수
-
         // 어댑터와 레이아웃 매니저
         val recyclerView = binding.rvResult
         recyclerView.adapter = resultAdapter
@@ -130,12 +130,12 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
                     resultAdapter.dataSet = dataSet
 
                     // 제품명, 효능효과, 사용법 음성으로 읽어주기
-                    result = "$name $effect $usingMethod"
-                    speakOut(result)
+                    mediInfo = "$name $effect $usingMethod"
+                    speakOut(mediInfo)
                 }else{
                     // 약 검색 실패 시, 인식된 텍스트만 읽어주기
-                    result = response.body()?.data?.text.toString()
-                    speakOut("해당 약을 찾지 못해 인식한 글자만 읽어드립니다. $result")
+                    mediInfo = response.body()?.data?.text.toString()
+                    speakOut("해당 약을 찾지 못해 인식한 글자만 읽어드립니다. $mediInfo")
                 }
             }
 

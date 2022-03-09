@@ -5,4 +5,6 @@
     <string name="server_client_id">758087498429-8rsaq0utu19lhmt0foe1lcpccoeoadk6.apps.googleusercontent.com</string>
     <string name="login_title">Welcome to\nMediMedi!</string>
     <string name="login_descript">Medicine Search App For Blind.\n\nJust take a picture of the medicine box! Then we will provide you with detailed information about it!</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
