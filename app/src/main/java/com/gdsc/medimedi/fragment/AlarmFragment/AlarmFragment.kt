@@ -1,4 +1,4 @@
-package com.gdsc.medimedi.fragment
+package com.gdsc.medimedi.fragment.AlarmFragment
 
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
@@ -34,6 +34,8 @@ class AlarmFragment : Fragment(), TextToSpeech.OnInitListener  {
 
         navController = Navigation.findNavController(view)
         tts = TextToSpeech(this.context, this)
+
+
 
     }
 

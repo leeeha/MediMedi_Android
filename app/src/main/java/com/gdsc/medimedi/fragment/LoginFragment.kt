@@ -87,16 +87,14 @@ class LoginFragment : Fragment(), TextToSpeech.OnInitListener {
         binding.signInButton.setOnClickListener {
             signIn()
             Log.d("signinbutton", "signIn")
-
-            // todo: 로그인에 성공했을 때만, 홈화면으로 넘어가도록 코드 바꿔야 함.
-            navController.navigate(R.id.action_loginFragment_to_homeFragment)
-            Log.d("signinbutton", "nav")
         }
 
         // 자동 로그인
         val gsa = GoogleSignIn.getLastSignedInAccount(requireActivity())
+
         if (gsa!= null){
             navController.navigate(R.id.action_loginFragment_to_homeFragment)
+            Log.d("loginId", "${gsa.email}")
             Log.d("autologin", "navigate to home")
         }
     }
@@ -169,6 +167,7 @@ class LoginFragment : Fragment(), TextToSpeech.OnInitListener {
     private fun <TResult> Task<TResult>.addOnCompleteListener(
         loginFragment: LoginFragment,
         onCompleteListener: OnCompleteListener<TResult?>) {
+
     }
 }
 

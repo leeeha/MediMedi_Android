@@ -13,13 +13,16 @@ import androidx.navigation.fragment.navArgs
 import com.gdsc.medimedi.R
 import com.gdsc.medimedi.databinding.FragmentSettingsBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
+import kotlinx.coroutines.DelicateCoroutinesApi
 import java.util.*
 
-
+@OptIn(DelicateCoroutinesApi::class)
 class SettingsFragment : Fragment(), TextToSpeech.OnInitListener {
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
@@ -44,6 +47,7 @@ class SettingsFragment : Fragment(), TextToSpeech.OnInitListener {
 
         mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
 
+        //todo: bundle 사용해서 account 값 받기?
 
 
         return binding.root
@@ -60,6 +64,7 @@ class SettingsFragment : Fragment(), TextToSpeech.OnInitListener {
         binding.btnSignOut.setOnClickListener {
             signOut()
             revokeAccess()
+            // Todo : delete retrofit 보내기
             navController.navigate(R.id.action_settingsFragment_to_manualFragment)
         }
 

@@ -69,7 +69,7 @@
 
     <fragment
         android:id="@+id/alarmFragment"
-        android:name="com.gdsc.medimedi.fragment.AlarmFragment"
+        android:name="com.gdsc.medimedi.fragment.AlarmFragment.AlarmFragment"
         android:label="fragment_alarm"
         tools:layout="@layout/fragment_alarm">
         <argument
