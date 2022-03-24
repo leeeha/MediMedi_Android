@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".fragment.AlarmFragment">
+    tools:context=".fragment.AlarmFragment.AlarmFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:padding="16dp"
@@ -28,5 +28,31 @@
             android:textStyle="bold"/>
 
     </com.google.android.material.appbar.AppBarLayout>
+
+
+
+    <Button
+        android:layout_width="366dp"
+        android:layout_height="54dp"
+        android:layout_marginBottom="84dp"
+        android:text="new alarm"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="104dp"
+        android:text="CANCEL ALARM"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
