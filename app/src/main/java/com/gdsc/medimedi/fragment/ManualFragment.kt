@@ -15,12 +15,13 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.gdsc.medimedi.R
 import com.gdsc.medimedi.databinding.FragmentManualBinding
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import java.util.*
 
 class ManualFragment : Fragment(), TextToSpeech.OnInitListener {
     private var _binding: FragmentManualBinding? = null
     private val binding get() = _binding!!
-
     private lateinit var navController : NavController
     private lateinit var tts: TextToSpeech
 
@@ -35,20 +36,16 @@ class ManualFragment : Fragment(), TextToSpeech.OnInitListener {
     // onCreateView()의 리턴값이 onViewCreated()의 매개변수로 전달됨.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         navController = Navigation.findNavController(view)
         tts = TextToSpeech(this.context, this)
 
         // 한번 클릭하면 텍스트 모드, 더블 클릭하면 음성 모드
         binding.frameLayout.setOnClickListener(object : DoubleClickListener() {
             override fun onSingleClick() {
-                val action = ManualFragmentDirections.actionManualFragmentToLoginFragment("텍스트 모드")
-                findNavController().navigate(action)
+                decideFirstScreen("텍스트 모드")
             }
-
             override fun onDoubleClick() {
-                val action = ManualFragmentDirections.actionManualFragmentToLoginFragment("음성 모드")
-                findNavController().navigate(action)
+                decideFirstScreen("음성 모드")
             }
         })
 
@@ -56,6 +53,34 @@ class ManualFragment : Fragment(), TextToSpeech.OnInitListener {
         binding.frameLayout.setOnLongClickListener {
             speakOut(getString(R.string.app_manual))
             return@setOnLongClickListener true
+        }
+    }
+
+    // 로그인 여부에 따라 첫 화면 결정
+    private fun decideFirstScreen(mode: String) {
+        val account = GoogleSignIn.getLastSignedInAccount(requireActivity())
+        if(account != null){ // 자동 로그인 후, 곧바로 홈 화면 진입
+            val action = ManualFragmentDirections.actionManualFragmentToHomeFragment(mode)
+            findNavController().navigate(action)
+        }else{ // 로그인 화면 진입
+            val action = ManualFragmentDirections.actionManualFragmentToLoginFragment(mode)
+            findNavController().navigate(action)
+        }
+    }
+
+    override fun onStart() { // 자동 로그인
+        super.onStart()
+        // Check for existing Google Sign In account,
+        // if the user is already signed in, the GoogleSignInAccount will be non-null.
+        val account = GoogleSignIn.getLastSignedInAccount(requireActivity())
+        updateUI(account)
+    }
+
+    private fun updateUI(account: GoogleSignInAccount?) {
+        if (account == null) { // 로그인 실패 (로그인 버튼 표시)
+            Log.e("SignIn", "Fail")
+        } else { // 로그인 성공 (서버에 유저 정보 보낸 뒤 홈화면으로 넘어가기)
+            Log.e("SignIn", "Success")
         }
     }
 

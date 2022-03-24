@@ -25,6 +25,7 @@ import java.util.*
 class DetailFragment : Fragment(), TextToSpeech.OnInitListener {
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
+
     private val args: DetailFragmentArgs by navArgs()
     private lateinit var navController: NavController
     private lateinit var tts: TextToSpeech
@@ -66,43 +67,49 @@ class DetailFragment : Fragment(), TextToSpeech.OnInitListener {
             LinearLayoutManager(requireContext()).orientation)
         recyclerView.addItemDecoration(dividerItemDecoration)
 
-        // id 값에 따라 약 정보 보여주기
+        // 이전 화면에서 클릭한 항목에 따라 약 정보 보여주기
         mRESTApi.getHistoryDetail(args.id).enqueue(object : Callback<DetailResponse>{
             override fun onResponse(
                 call: Call<DetailResponse>,
                 response: Response<DetailResponse>
             ) {
-                val name = response.body()?.name
-                val entp = response.body()?.entp
-                val effect = response.body()?.effect
-                val usingMethod = response.body()?.usingMethod
-                val caution = response.body()?.caution
-                val notice = response.body()?.notice
-                val interact = response.body()?.interact
-                val sideEffect = response.body()?.sideEffect
-                val storageMethod = response.body()?.storageMethod
+                if(response.isSuccessful){
+                    val name = response.body()?.name
+                    val entp = response.body()?.entp
+                    val effect = response.body()?.effect
+                    val usingMethod = response.body()?.usingMethod
+                    val caution = response.body()?.caution
+                    val notice = response.body()?.notice
+                    val interact = response.body()?.interact
+                    val sideEffect = response.body()?.sideEffect
+                    val storageMethod = response.body()?.storageMethod
 
-                // 리사이클러뷰 초기화
-                with(dataSet){
-                    add(Result("제품명", name))
-                    add(Result("회사명", entp))
-                    add(Result("효능∙효과", effect))
-                    add(Result("사용법", usingMethod))
-                    add(Result("주의사항", caution))
-                    add(Result("경고", notice))
-                    add(Result("상호작용", interact))
-                    add(Result("부작용", sideEffect))
-                    add(Result("보관 방법", storageMethod))
+                    // 리사이클러뷰 초기화
+                    with(dataSet){
+                        add(Result("제품명", name))
+                        add(Result("회사명", entp))
+                        add(Result("효능∙효과", effect))
+                        add(Result("사용법", usingMethod))
+                        add(Result("주의사항", caution))
+                        add(Result("경고", notice))
+                        add(Result("상호작용", interact))
+                        add(Result("부작용", sideEffect))
+                        add(Result("보관 방법", storageMethod))
+                    }
+                    resultAdapter.dataSet = dataSet
+
+                    // 제품명, 효능효과, 사용법은 음성으로 읽어주기
+                    mediInfo = "$name $effect $usingMethod"
+                    speakOut(mediInfo)
+
+                    Log.e("Retrofit", "Success!!!")
+                }else{
+                    Log.e("Retrofit", "Client Error!!!")
                 }
-                resultAdapter.dataSet = dataSet
-
-                // 제품명, 효능효과, 사용법은 음성으로 읽어주기
-                mediInfo = "$name $effect $usingMethod"
-                speakOut(mediInfo)
             }
 
             override fun onFailure(call: Call<DetailResponse>, t: Throwable) {
-                 Log.e("Retrofit", "Connection Error!")
+                 Log.e("Retrofit", "Server Error!!!")
             }
         })
     }

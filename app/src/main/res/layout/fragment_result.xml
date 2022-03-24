@@ -45,36 +45,32 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ImageView
-        android:id="@+id/iv_medicine_box"
-        android:layout_width="300dp"
-        android:layout_height="150dp"
-        android:layout_margin="16dp"
-        android:background="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_bar" />
+    <!-- TODO: 일단은 이미지 없이 텍스트만 보여주기 -->
+<!--    <ImageView-->
+<!--        android:id="@+id/iv_medicine_box"-->
+<!--        android:layout_width="300dp"-->
+<!--        android:layout_height="150dp"-->
+<!--        android:layout_margin="16dp"-->
+<!--        android:background="@color/white"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/app_bar" />-->
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/btn_replay"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:background="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/btn_camera"
-        app:layout_constraintTop_toBottomOf="@+id/iv_medicine_box">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_result"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:background="@color/white"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <Button
         android:id="@+id/btn_camera"

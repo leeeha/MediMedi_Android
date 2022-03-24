@@ -4,41 +4,25 @@ import com.gdsc.medimedi.model.History
 import com.google.gson.annotations.SerializedName
 
 data class LoginRequest(
-    val token: String,
-    val name: String,
-    val email: String
+    val token: String?,
+    val name: String?,
+    val email: String?
 )
 
 data class LoginResponse(
     val success: Boolean,
     val data: Unit
-) {
-    override fun toString(): String {
-        return "LoginResponse{" +
-                "success=" + success +
-                ", data=" + data + "}"
-    }
-}
-
-data class UserResponse(
-    val id: Int,
-    val email: String,
-    val name: String
-)
-
-data class IdBody(
-    val id: Int
 )
 
 data class SearchRequest(
-    val token: String?, // nullable
+    val token: String?,
     @SerializedName("image_url")
     val imageUrl: String?
 )
 
 data class SearchResponse(
     val success: Boolean,
-    val data: MedicineInfo
+    val data: List<String>
 )
 
 data class MedicineInfo(

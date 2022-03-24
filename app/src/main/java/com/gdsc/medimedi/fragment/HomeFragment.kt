@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.gdsc.medimedi.R
 import com.gdsc.medimedi.databinding.FragmentHomeBinding
 import java.util.*
@@ -20,13 +21,12 @@ import java.util.*
 class HomeFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListener{
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-
     private lateinit var navController : NavController
+    private val args: HomeFragmentArgs by navArgs()
     private lateinit var tts: TextToSpeech
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         // This callback will only be called when HomeFragment is at least started.
         val callback: OnBackPressedCallback =
             object : OnBackPressedCallback(true) {
@@ -51,7 +51,6 @@ class HomeFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListen
                     alertDialog.show()
                 }
             }
-
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
 
@@ -65,7 +64,6 @@ class HomeFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         navController = Navigation.findNavController(view)
         tts = TextToSpeech(this.context, this)
 
@@ -101,6 +99,13 @@ class HomeFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListen
             tts.language = Locale.KOREA
             tts.setPitch(0.6F)
             tts.setSpeechRate(1.2F)
+
+            // Case1: 매뉴얼 화면에서 모드 선택 -> 첫 로그인 (tts) -> 홈 (null)
+            // Case2: 매뉴얼 화면에서 모드 선택 -> 자동 로그인 -> 홈 (tts)
+            if(args.tts != null){
+                speakOut(args.tts.toString())
+            }
+
         } else {
             Log.e("TTS", "Initialization Failed!")
         }

@@ -75,25 +75,29 @@ class HistoryFragment : Fragment(), TextToSpeech.OnInitListener {
                 call: Call<HistoryResponse>,
                 response: Response<HistoryResponse>
             ) {
-                if(response.body()?.success == true){
-                    val size = response.body()!!.data.size // 검색했던 약의 개수
+                if(response.isSuccessful){ // 레트로핏 성공
+                    response.body()?.let {
+                        if(it.success){ // 검색 기록 조회 성공
 
-                    for(i in 0..size){
-                        val id = response.body()!!.data.get(i).id
-                        val name = response.body()!!.data.get(i).name
-                        val date = response.body()!!.data.get(i).date
+                            val size = it.data.size
+                            for(i in 0..size){
+                                val id = it.data[i].id
+                                val name = it.data[i].name
+                                val date = it.data[i].date
+                                dataSet.add(i, History(id, name, date))
+                            }
+                            historyAdapter.dataSet = dataSet
 
-                        dataSet.add(i, History(id, name, date))
+                        }else{ // 기록 조회 실패
+                            Log.e("Retrofit", "기록 조회 실패")
+                        }
                     }
-
-                    historyAdapter.dataSet = dataSet
                 }
             }
 
             override fun onFailure(call: Call<HistoryResponse>, t: Throwable) {
-                Log.e("Retrofit", "Connection Error!")
+                Log.e("Retrofit", t.message.toString())
             }
-
         })
     }
 
