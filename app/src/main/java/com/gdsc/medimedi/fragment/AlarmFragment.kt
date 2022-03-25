@@ -1,4 +1,4 @@
-package com.gdsc.medimedi.fragment.AlarmFragment
+package com.gdsc.medimedi.fragment
 
 import android.os.Bundle
 import android.speech.tts.TextToSpeech

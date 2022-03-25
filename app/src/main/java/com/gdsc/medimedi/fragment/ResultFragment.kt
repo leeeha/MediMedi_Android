@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +19,7 @@ import com.gdsc.medimedi.retrofit.RESTApi
 import java.util.*
 import com.gdsc.medimedi.retrofit.SearchRequest
 import com.gdsc.medimedi.retrofit.SearchResponse
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,12 +28,12 @@ import retrofit2.Response
 class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
     private var _binding: FragmentResultBinding? = null
     private val binding get() = _binding!!
-
     private val args: ResultFragmentArgs by navArgs()
     private lateinit var navController : NavController
     private lateinit var tts: TextToSpeech
 
     // 리사이클러뷰
+    private val mRESTApi = RESTApi.retrofit.create(RESTApi::class.java)
     private var resultAdapter = ResultAdapter()
     private val cateList = listOf("제품명", "회사명", "효능∙효과", "사용법", "주의사항", "경고", "상호작용", "부작용", "보관법")
     private lateinit var descList: List<String>
@@ -41,9 +41,6 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
 
     // 음성으로 제공할 약 정보 (제품명, 효능효과, 사용법)
     private lateinit var ttsGuide: String
-
-    // 레트로핏 객체 생성
-    private val mRESTApi = RESTApi.retrofit.create(RESTApi::class.java)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,7 +55,7 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
         navController = Navigation.findNavController(view)
         tts = TextToSpeech(this.context, this)
 
-        // todo: 레트로핏으로 데이터 가져와서 리사이클러뷰 초기화
+        // todo: 리사이클러뷰 초기화
         loadData()
 
         // 이전 화면으로 돌아가서 다시 촬영하기
@@ -69,7 +66,7 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
         // 검색 기록 조회 버튼
         binding.btnHistory.setOnClickListener{
             val action = ResultFragmentDirections.actionResultFragmentToHistoryFragment("검색 기록 조회하기")
-            findNavController().navigate(action)
+            navController.navigate(action)
         }
 
         // 리사이클러뷰 길게 누르면 약 설명 다시 재생
@@ -80,18 +77,18 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
     }
 
     private fun loadData() {
-        // todo: 로그인 성공 후 유저 토큰 받아오기
-        //val account: GoogleSignInAccount? = null
-        val requestBody = SearchRequest("subinToken", args.imgUrl)
-        Log.e("ResultFragment", "image url: ${args.imgUrl}")
+        val account = GoogleSignIn.getLastSignedInAccount(requireActivity())
+        val requestBody = SearchRequest(account?.idToken, args.imgUrl)
+        Log.e("ResultFragment", "${args.imgUrl}")
 
-        // todo: enqueue로 안되면 코루틴 사용하기 (ui 작업 기본적으로 메인 스레드 되고 있나?????)
         mRESTApi.getSearchResult(requestBody).enqueue(object : Callback<SearchResponse>{
             override fun onResponse(
                 call: Call<SearchResponse>,
                 response: Response<SearchResponse>
             ) {
-                if(response.isSuccessful){ // 레트로핏 성공
+                if(response.isSuccessful){
+                    Log.e("Retrofit", "Success")
+
                     response.body()?.let {
                         if(it.success){ // 검색 성공
                             Log.e("검색 성공 후 약 이름: ", it.data[0])
@@ -119,7 +116,6 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
         })
     }
 
-
     private fun initRecyclerView(descList: List<String>) {
         // 어댑터와 레이아웃 매니저
         val recyclerView = binding.rvResult
@@ -133,9 +129,7 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
 
         // todo: 레트로핏으로 받아온 데이터로 초기화
         for(i in 0..8){
-            with(dataSet){
-                add(Result(cateList[i], descList[i]))
-            }
+            dataSet.add(Result(cateList[i], descList[i]))
         }
 
         // 리사이클러뷰 데이터 업데이트

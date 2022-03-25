@@ -2,7 +2,9 @@
     <string name="app_name">MediMedi</string>
     <string name="app_manual">안녕하세요. 의약품 정보를 알려주는 메디메디입니다.\n
         화면을 한번 클릭하면 텍스트 모드, 두번 클릭하면 음성 모드로 앱을 사용할 수 있습니다. 사용 방법을 다시 듣고 싶으시면 화면을 길게 눌러주세요.</string>
-    <string name="web_client_id">95681778629-mffl7t74qrn9vmomk0narudg2863cb06.apps.googleusercontent.com</string>
     <string name="login_title">Welcome to\nMediMedi!</string>
-    <string name="login_descript">Medicine Search App For Blind.\n\nJust take a picture of the medicine box! Then we will provide you with detailed information about it!</string>
+    <string name="login_descript">Medicine Search App For Blind.\n\n
+        Just take a picture of the medicine box! Then we will provide you with detailed information about it!</string>
+
+    <string name="web_client_id">95681778629-mffl7t74qrn9vmomk0narudg2863cb06.apps.googleusercontent.com</string>
 </resources>

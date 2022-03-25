@@ -15,6 +15,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.gdsc.medimedi.R
 import com.gdsc.medimedi.databinding.FragmentManualBinding
+import com.gdsc.medimedi.databinding.FragmentSettingsBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import java.util.*
@@ -56,7 +57,9 @@ class ManualFragment : Fragment(), TextToSpeech.OnInitListener {
         }
     }
 
-    // 로그인 여부에 따라 첫 화면 결정
+    // Case1: 매뉴얼 화면에서 모드 선택 -> 첫 로그인 (tts) -> 홈 (null)
+    // Case2: 매뉴얼 화면에서 모드 선택 -> 자동 로그인 -> 홈 (tts)
+    // todo: 선택한 모드에 따라 설정 화면의 스위치 on/off 해줘야 함.
     private fun decideFirstScreen(mode: String) {
         val account = GoogleSignIn.getLastSignedInAccount(requireActivity())
         if(account != null){ // 자동 로그인 후, 곧바로 홈 화면 진입
