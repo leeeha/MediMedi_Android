@@ -17,7 +17,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
-import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.amazonaws.auth.BasicAWSCredentials
@@ -61,9 +60,9 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
     private lateinit var previewUseCase: Preview
     private lateinit var analysisUseCase: ImageAnalysis
     private lateinit var captureUseCase: ImageCapture
-    // Undefined여도 어떤 객체가 감지되긴 한 거니까 캡쳐 범위에 포함시키자.
-    private val boxList = listOf("Packaged goods", "Box", "Business card", "Container", "Undefined")
 
+    // todo: Undefined여도 어떤 객체가 감지되긴 한 거니까 캡쳐 범위에 포함시키자
+    private val boxList = listOf("Packaged goods", "Box", "Business card", "Container")
     private var imgUrl: String? = null // s3 이미지 url
 
     override fun onCreateView(
@@ -79,6 +78,17 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
         tts = TextToSpeech(requireContext(), this)
+
+        // 검색 기록 조회 버튼
+        binding.btnHistory.setOnClickListener {
+            val action = SearchFragmentDirections.actionSearchFragmentToHistoryFragment("검색 기록 조회하기")
+            navController.navigate(action)
+        }
+
+        // 촬영 버튼 (약 상자처럼 생긴 물체가 감지되면 촬영)
+        binding.btnCamera.setOnClickListener {
+            takePhoto()
+        }
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
         cameraProviderFuture.addListener({
@@ -108,17 +118,6 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
         // 객체 탐지기 생성
         objectDetector =
             ObjectDetection.getClient(customObjectDetectorOptions)
-
-        // 검색 기록 조회 버튼
-        binding.btnHistory.setOnClickListener {
-            val action = SearchFragmentDirections.actionSearchFragmentToHistoryFragment("검색 기록 조회하기")
-            navController.navigate(action)
-        }
-
-        // 촬영 버튼 (약 상자처럼 생긴 물체가 감지되면 촬영)
-        binding.btnCamera.setOnClickListener {
-            takePhoto()
-        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -183,10 +182,10 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
                             binding.layout.addView(element, 1)
 
                             // todo: 약 상자처럼 생긴 물체가 감지될 경우, 이미지 캡처하여 결과 화면으로 넘어가기
-                            //  더블클릭 한 것처럼, 네비게이션을 2번 이상 호출하는 경우가 생길 수 있음!!
-                            if (boxList.contains(objectLabel)) {
-                                takePhoto()
-                            }
+                            //  더블클릭 한 것처럼, 네비게이션이 2번 이상 호출되면 action의 아이디 값이 유효하지 않을 수 있음.
+//                            if (boxList.contains(objectLabel)) {
+//                                takePhoto()
+//                            }
                         }
 
                         imageProxy.close()
@@ -206,14 +205,12 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
                 analysisUseCase,
                 captureUseCase
             )
-
         } catch (exc: Exception) {
             Log.e("bindToLifecycle", "Use case binding failed", exc)
         }
     }
 
-    // 사진 찍어서 s3에 이미지 올리기
-    @OptIn(DelicateCoroutinesApi::class)
+    // todo: 코루틴 사용해서 s3에 이미지 올리기
     @RequiresApi(Build.VERSION_CODES.O)
     private fun takePhoto() {
         // 출력 파일 옵션 설정을 위한 임시 파일 객체 생성
@@ -229,7 +226,6 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
 
                 // 이미지 저장 성공
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-
                     val formatter = DateTimeFormatter.ofPattern("yyMMdd_hhmm_")
                     val s3Url = "https://medimedi.s3.ap-northeast-2.amazonaws.com/"
                     val time = LocalDateTime.now().format(formatter) // 현재 시간을 "yyMMdd_hhmm_" 타입으로 변환
@@ -277,7 +273,7 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
 
                     // 결과 화면으로 넘어가기 (이미지 url 전달)
                     val action = SearchFragmentDirections.actionSearchFragmentToResultFragment(imgUrl)
-                    navController.safeNavigate(action)
+                    navController.navigate(action)
                 }
             }
 
@@ -290,16 +286,6 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
                 Log.w("AmazonS3", "UPLOAD ERROR --- ID: ${id}, exception: ${ex}")
             }
         })
-    }
-
-    private fun NavController.safeNavigate(direc: NavDirections) {
-        Log.e("clickTag", "Click happened")
-
-        // todo: actionSearchFragmentToResultFragment 아이디 값이 유효할 때만 네비게이션하도록
-        currentDestination?.getAction(direc.actionId)?.run {
-            Log.e("clickTag", "Click Propagated")
-            navigate(direc)
-        }
     }
 
     // tts 객체 초기화
@@ -318,10 +304,11 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
     }
 
+
     override fun onDestroyView() {
         super.onDestroyView()
         tts.stop()
         tts.shutdown()
-        _binding = null
+//        _binding = null
     }
 }

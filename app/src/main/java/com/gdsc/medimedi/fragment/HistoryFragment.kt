@@ -18,6 +18,7 @@ import com.gdsc.medimedi.databinding.FragmentHistoryBinding
 import com.gdsc.medimedi.model.History
 import com.gdsc.medimedi.retrofit.HistoryResponse
 import com.gdsc.medimedi.retrofit.RESTApi
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import retrofit2.Call
 import retrofit2.Callback
@@ -64,32 +65,31 @@ class HistoryFragment : Fragment(), TextToSpeech.OnInitListener {
         val recyclerView = binding.rvHistory
         recyclerView.adapter = historyAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
         val dividerItemDecoration = DividerItemDecoration(recyclerView.context,
             LinearLayoutManager(requireContext()).orientation)
         recyclerView.addItemDecoration(dividerItemDecoration)
 
-        val account: GoogleSignInAccount? = null
+        val account = GoogleSignIn.getLastSignedInAccount(requireActivity())
         mRESTApi.getSearchHistory(account?.idToken).enqueue(object: Callback<HistoryResponse> {
             override fun onResponse(
                 call: Call<HistoryResponse>,
                 response: Response<HistoryResponse>
             ) {
                 if(response.isSuccessful){ // 레트로핏 성공
-                    response.body()?.let {
-                        if(it.success){ // 검색 기록 조회 성공
+                    Log.e("Retrofit", "Success")
 
-                            val size = it.data.size
-                            for(i in 0..size){
+                    response.body()?.let {
+                        if(it.success && it.data.isNotEmpty()){ // 기록 조회 성공
+                            for(i in 0..it.data.size){
                                 val id = it.data[i].id
                                 val name = it.data[i].name
                                 val date = it.data[i].date
-                                dataSet.add(i, History(id, name, date))
+                                dataSet.add(History(id, name, date))
                             }
                             historyAdapter.dataSet = dataSet
 
                         }else{ // 기록 조회 실패
-                            Log.e("Retrofit", "기록 조회 실패")
+                            Log.e("Retrofit", "레트로핏은 성공했지만, 기록 조회 실패")
                         }
                     }
                 }

@@ -20,9 +20,8 @@ import java.util.*
 import com.gdsc.medimedi.retrofit.SearchRequest
 import com.gdsc.medimedi.retrofit.SearchResponse
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.*
+import retrofit2.HttpException
 
 // 결과 화면
 class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
@@ -36,7 +35,7 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
     private val mRESTApi = RESTApi.retrofit.create(RESTApi::class.java)
     private var resultAdapter = ResultAdapter()
     private val cateList = listOf("제품명", "회사명", "효능∙효과", "사용법", "주의사항", "경고", "상호작용", "부작용", "보관법")
-    private lateinit var descList: List<String>
+    //private lateinit var descList: List<String>
     private val dataSet = mutableListOf<Result>()
 
     // 음성으로 제공할 약 정보 (제품명, 효능효과, 사용법)
@@ -55,8 +54,14 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
         navController = Navigation.findNavController(view)
         tts = TextToSpeech(this.context, this)
 
-        // todo: 리사이클러뷰 초기화
-        loadData()
+        val recyclerView = binding.rvResult
+        recyclerView.adapter = resultAdapter
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        val dividerItemDecoration = DividerItemDecoration(recyclerView.context,
+            LinearLayoutManager(requireContext()).orientation)
+        recyclerView.addItemDecoration(dividerItemDecoration)
+
+        doRetrofitWithCoroutine() // todo: 레트로핏 데이터로 초기화
 
         // 이전 화면으로 돌아가서 다시 촬영하기
         binding.btnCamera.setOnClickListener {
@@ -76,64 +81,78 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
         }
     }
 
-    private fun loadData() {
-        val account = GoogleSignIn.getLastSignedInAccount(requireActivity())
-        val requestBody = SearchRequest(account?.idToken, args.imgUrl)
-        Log.e("ResultFragment", "${args.imgUrl}")
+    private fun doRetrofitWithCoroutine() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val account = GoogleSignIn.getLastSignedInAccount(requireActivity())
+            val requestBody = SearchRequest(account?.idToken, args.imgUrl)
+            Log.e("ResultFragment", "${args.imgUrl}")
 
-        mRESTApi.getSearchResult(requestBody).enqueue(object : Callback<SearchResponse>{
-            override fun onResponse(
-                call: Call<SearchResponse>,
-                response: Response<SearchResponse>
-            ) {
-                if(response.isSuccessful){
-                    Log.e("Retrofit", "Success")
+            // todo: 서버에서 검색 결과 받아오기
+            val response = mRESTApi.getSearchResult(requestBody)
+            withContext(Dispatchers.Main) {
+                try {
+                    if (response.isSuccessful) {
+                        // Do something with response e.g show to the UI. (리사이클러뷰에 결과 보여주기)
+                        Log.e("Retrofit", "Success")
 
-                    response.body()?.let {
-                        if(it.success){ // 검색 성공
-                            Log.e("검색 성공 후 약 이름: ", it.data[0])
-
-                            // 리사이클러뷰 초기화
-                            descList = it.data
-                            initRecyclerView(descList)
-
-                            // 제품명, 효능효과, 사용법은 음성으로 읽어주기
-                            ttsGuide = "${descList[0]} ${descList[2]} ${descList[3]}"
-                            speakOut(ttsGuide)
-
-                        }else{ // 검색 실패
-                            ttsGuide = it.data[0] // todo: 응답이 String 배열 타입이어야 함.
-                            Log.e("검색 실패 후 인식한 글자: ", ttsGuide)
-                            speakOut("해당 약을 찾지 못해 인식한 글자만 읽어드립니다. $ttsGuide")
+                        val body = response.body() ?: throw IllegalArgumentException("body is null")
+                        if(body.success){
+                            Log.e("검색 성공 후 약 이름: ", body.data.name)
                         }
+                        else {
+                            Log.e("검색 실패 후 인식한 글자: ", body.data.text)
+                        }
+
+                        //initRecyclerView(body)
+                    } else {
+                        Log.e("Retrofit", "Error: ${response.errorBody()}")
                     }
+                } catch (e: HttpException) {
+                    Log.e("Retrofit", "Exception: ${e.message}")
+
+                } catch (e: Throwable) {
+                    Log.e("Retrofit", "Throwable: ${e.message}")
                 }
             }
-
-            override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-                Log.e("Retrofit", t.message.toString())
-            }
-        })
+        }
     }
 
-    private fun initRecyclerView(descList: List<String>) {
-        // 어댑터와 레이아웃 매니저
-        val recyclerView = binding.rvResult
-        recyclerView.adapter = resultAdapter
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        // 아이템 구분선 추가
-        val dividerItemDecoration = DividerItemDecoration(recyclerView.context,
-            LinearLayoutManager(requireContext()).orientation)
-        recyclerView.addItemDecoration(dividerItemDecoration)
-
-        // todo: 레트로핏으로 받아온 데이터로 초기화
-        for(i in 0..8){
-            dataSet.add(Result(cateList[i], descList[i]))
+    private fun initRecyclerView(body: SearchResponse) {
+        val data = body.data
+        if(body.success){
+            Log.e("검색 성공 후 약 이름: ", data.name)
+        } else {
+            Log.e("검색 실패 후 인식한 글자: ", data.text)
         }
 
-        // 리사이클러뷰 데이터 업데이트
-        resultAdapter.dataSet = dataSet
+//        body?.let {
+//            if (it.success) { // 검색 성공
+//                Log.e("검색 성공 후 약 이름: ", it.data.name)
+//
+//                // 리사이클러뷰 데이터 업데이트
+//                with(dataSet) {
+//                    add(Result(cateList[0], it.data.name))
+//                    add(Result(cateList[1], it.data.entp))
+//                    add(Result(cateList[2], it.data.effect))
+//                    add(Result(cateList[3], it.data.usingMethod))
+//                    add(Result(cateList[4], it.data.caution))
+//                    add(Result(cateList[5], it.data.notice))
+//                    add(Result(cateList[6], it.data.interact))
+//                    add(Result(cateList[7], it.data.sideEffect))
+//                    add(Result(cateList[8], it.data.storageMethod))
+//                }
+//                resultAdapter.dataSet = dataSet
+//
+//                // 제품명, 효능효과, 사용법은 음성으로 읽어주기
+//                ttsGuide = "${it.data.name} ${it.data.effect} ${it.data.usingMethod}"
+//                speakOut(ttsGuide)
+//
+//            } else { // 검색 실패
+//                ttsGuide = it.data.text
+//                Log.e("검색 실패 후 인식한 글자: ", ttsGuide)
+//                speakOut("해당 약을 찾지 못해 인식한 글자만 읽어드립니다. $ttsGuide")
+//            }
+//        }
     }
 
     override fun onInit(status: Int) {

@@ -22,7 +22,7 @@ data class SearchRequest(
 
 data class SearchResponse(
     val success: Boolean,
-    val data: List<String>
+    val data: MedicineInfo
 )
 
 data class MedicineInfo(
