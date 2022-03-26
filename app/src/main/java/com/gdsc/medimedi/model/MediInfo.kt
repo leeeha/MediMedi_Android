@@ -17,5 +17,6 @@ data class MedicineInfo(
     val sideEffect: String, // 부작용
     @SerializedName("storage_method")
     val storageMethod: String, // 보관방법
-    val text: String // 약 검색 결과가 없는 경우, 인식한 텍스트만 읽어주기
+    val text: String?, // 약 검색 결과가 없는 경우, 인식한 텍스트만 읽어주기
+    val date: String // 최근 검색일
 )

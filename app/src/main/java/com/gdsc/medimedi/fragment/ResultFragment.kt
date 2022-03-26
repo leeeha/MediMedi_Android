@@ -20,8 +20,11 @@ import com.gdsc.medimedi.model.Result
 import com.gdsc.medimedi.retrofit.RESTApi
 import java.util.*
 import com.gdsc.medimedi.retrofit.SearchRequest
+import com.gdsc.medimedi.retrofit.SearchResponse
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import kotlinx.coroutines.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 // 결과 화면
 class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
@@ -66,8 +69,7 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
         navController = Navigation.findNavController(view)
         tts = TextToSpeech(this.context, this)
 
-        // onViewCreated 메소드에서 리사이클러뷰 어답터 초기화 해도 되나?
-        doRetrofitWithCoroutine()
+        doRetrofit()
 
         // 이전 화면으로 돌아가서 다시 촬영하기
         binding.btnCamera.setOnClickListener {
@@ -80,47 +82,44 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
             navController.navigate(action)
         }
 
-        // 리사이클러뷰 길게 누르면 약 설명 다시 재생
-        binding.rvResult.setOnLongClickListener{
-            speakOut(ttsGuide)
-            return@setOnLongClickListener true
-        }
+        // todo: 화면 꾹 누르면 음성 다시 재생하기
     }
 
-    private fun doRetrofitWithCoroutine() {
+    private fun doRetrofit() {
         val account = GoogleSignIn.getLastSignedInAccount(requireActivity())
         val requestBody = SearchRequest(account?.idToken, args.imgUrl)
         Log.e("ResultFragment", "${args.imgUrl}")
+        mRESTApi.getSearchResult(requestBody).enqueue(object : Callback<SearchResponse> {
+            override fun onResponse(
+                call: Call<SearchResponse>,
+                response: Response<SearchResponse>
+            ) {
+                if (response.isSuccessful) {
+                    endTime = System.currentTimeMillis()
+                    Log.e("Retrofit", "Success: ${endTime - startTime} ms")
+                    progressDialog.dismiss()
+                    progressDialog.cancel()
 
-        CoroutineScope(Dispatchers.Main).launch {
-
-            // 응답 결과 가져오는 건 IO 스레드에서
-            val response = withContext(Dispatchers.IO) {
-                mRESTApi.getSearchResult(requestBody)
-            }
-
-            if (response.isSuccessful) {
-                endTime = System.currentTimeMillis()
-                Log.e("Retrofit", "Success: ${endTime - startTime} ms")
-                progressDialog.dismiss()
-                progressDialog.cancel()
-
-                // ui에 결과 보여주는 건 메인 스레드에서
-                response.body()?.let{
-                    if(it.success){ // 검색 성공
-                        Log.e("검색 성공 후 약 이름: ", it.data.name)
-                        initRecyclerView(it.data)
+                    response.body()?.let{
+                        if(it.success){ // 검색 성공
+                            Log.e("검색 성공 후 약 이름: ", it.data.name)
+                            initRecyclerView(it.data)
+                        }
+                        else {
+                            ttsGuide = it.data.text.toString()
+                            Log.e("검색 실패 후 인식한 글자: ", ttsGuide)
+                            speakOut("해당 약을 찾지 못해 인식한 글자만 읽어드립니다. $ttsGuide")
+                        }
                     }
-                    else {
-                        ttsGuide = it.data.text
-                        Log.e("검색 실패 후 인식한 글자: ", ttsGuide)
-                        speakOut("해당 약을 찾지 못해 인식한 글자만 읽어드립니다. $ttsGuide")
-                    }
+                } else {
+                    Log.e("Retrofit", "Error: ${response.errorBody()}")
                 }
-            } else {
-                Log.e("Retrofit", "Error: ${response.errorBody()}")
             }
-        }
+
+            override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
+                Log.e("Retrofit", t.message.toString())
+            }
+        })
     }
 
     private fun initRecyclerView(data: MedicineInfo) {
@@ -183,6 +182,6 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
         super.onDestroyView()
         tts.stop()
         tts.shutdown()
-        _binding = null
+//        _binding = null
     }
 }
