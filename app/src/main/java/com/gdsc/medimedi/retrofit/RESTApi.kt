@@ -28,9 +28,8 @@ interface RESTApi {
     @POST("user")
     fun sendUserInfo(@Body loginRequest: LoginRequest): Call<LoginResponse>
 
-    // CoroutineScope 안에서 사용하려면 suspend 키워드 붙여줘야 함.
     @POST("search")
-    suspend fun getSearchResult(@Body searchRequest: SearchRequest): Response<SearchResponse>
+    fun getSearchResult(@Body searchRequest: SearchRequest): Call<SearchResponse>
 
     @GET("history/list/{token}")
     fun getSearchHistory(@Path("token") token: String?): Call<HistoryResponse>

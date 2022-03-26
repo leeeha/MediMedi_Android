@@ -63,7 +63,6 @@ class DetailFragment : Fragment(), TextToSpeech.OnInitListener {
                 response: Response<DetailResponse>
             ) {
                 if(response.isSuccessful){
-                    // body가 널이면 에러
                     response.body()?.let {
                         if(it.success){
                             Log.e("Retrofit", "기록 상세 조회 성공")
