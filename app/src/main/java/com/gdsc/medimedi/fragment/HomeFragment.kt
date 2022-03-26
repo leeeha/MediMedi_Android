@@ -11,7 +11,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.gdsc.medimedi.R
 import com.gdsc.medimedi.databinding.FragmentHomeBinding
@@ -27,6 +26,7 @@ class HomeFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListen
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         // This callback will only be called when HomeFragment is at least started.
         val callback: OnBackPressedCallback =
             object : OnBackPressedCallback(true) {
@@ -77,19 +77,19 @@ class HomeFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListen
         when(v?.id){
             R.id.btn_camera -> {
                 val action = HomeFragmentDirections.actionHomeFragmentToSearchFragment("약 검색하기")
-                findNavController().navigate(action)
+                navController.navigate(action)
             }
             R.id.btn_alarm -> {
                 val action = HomeFragmentDirections.actionHomeFragmentToAlarmFragment("약 알림받기")
-                findNavController().navigate(action)
+                navController.navigate(action)
             }
             R.id.btn_history -> {
                 val action = HomeFragmentDirections.actionHomeFragmentToHistoryFragment("검색 기록 조회하기")
-                findNavController().navigate(action)
+                navController.navigate(action)
             }
             R.id.btn_settings -> {
                 val action = HomeFragmentDirections.actionHomeFragmentToSettingsFragment("설정 화면")
-                findNavController().navigate(action)
+                navController.navigate(action)
             }
         }
     }

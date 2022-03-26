@@ -10,6 +10,7 @@ import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -65,6 +66,20 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
     // todo: Undefined여도 어떤 객체가 감지되긴 한 거니까 캡쳐 범위에 포함시키자
     private val boxList = listOf("Packaged goods", "Box", "Business card", "Container")
     private lateinit var imgUrl: String // s3 이미지 url
+
+    // 홈 화면으로 돌아가기 (네비게이션 에러 임시방편으로 해결)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // This callback will only be called when SearchFragment is at least started.
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    navController.popBackStack()
+                }
+            }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

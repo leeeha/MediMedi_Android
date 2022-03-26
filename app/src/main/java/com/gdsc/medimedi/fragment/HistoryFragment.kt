@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
@@ -45,14 +46,6 @@ class HistoryFragment : Fragment(), TextToSpeech.OnInitListener {
         tts = TextToSpeech(this.context, this)
 
         doRetrofitWithCoroutine()
-//
-//        historyAdapter.setOnItemClickListener(object : HistoryAdapter.OnItemClickListener{
-//            override fun onItemClick(v: View, data: History, pos: Int) {
-//                // 인덱스와 약 이름 전달하기
-//                val action = HistoryFragmentDirections.actionHistoryFragmentToDetailFragment(pos, dataSet[pos].name)
-//                findNavController().navigate(action)
-//            }
-//        })
     }
 
     private fun doRetrofitWithCoroutine() {
@@ -79,24 +72,26 @@ class HistoryFragment : Fragment(), TextToSpeech.OnInitListener {
 
     private fun initRecyclerView(data: MutableList<History>) {
         val recyclerView = binding.rvHistory
-        historyAdapter = HistoryAdapter()
+        historyAdapter = HistoryAdapter{ pos -> onListItemClick(pos) }
         recyclerView.adapter = historyAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        val dividerItemDecoration = DividerItemDecoration(requireContext(),
-            LinearLayoutManager(requireContext()).orientation)
-        recyclerView.addItemDecoration(dividerItemDecoration)
-
-        dataSet.add(History("번호", "이름", "날짜"))
 
         for(i in 0 until data.size){
             val id = data[i].id
             val name = data[i].name
             val date = data[i].date
-            Log.e("Retrofit", "${id}, ${name}, ${date}")
-
+            Log.e("Retrofit", " ${id} ${name} ${date}")
             dataSet.add(History(id, name, date))
         }
         historyAdapter.dataSet = dataSet
+    }
+
+    // todo: id값 넘겨주면서 Detail 화면으로 이동
+    private fun onListItemClick(pos: Int) {
+        val itemId = dataSet[pos].id
+        val itemName = dataSet[pos].name
+        val action = HistoryFragmentDirections.actionHistoryFragmentToDetailFragment(itemId, itemName)
+        navController.navigate(action)
     }
 
     override fun onInit(status: Int) {

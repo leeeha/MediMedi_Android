@@ -66,7 +66,6 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
         navController = Navigation.findNavController(view)
         tts = TextToSpeech(this.context, this)
 
-        // onViewCreated 메소드에서 리사이클러뷰 어답터 초기화 해도 되나?
         doRetrofitWithCoroutine()
 
         // 이전 화면으로 돌아가서 다시 촬영하기
@@ -80,11 +79,7 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
             navController.navigate(action)
         }
 
-        // 리사이클러뷰 길게 누르면 약 설명 다시 재생
-        binding.rvResult.setOnLongClickListener{
-            speakOut(ttsGuide)
-            return@setOnLongClickListener true
-        }
+        // todo: 화면 꾹 누르면 음성 다시 재생하기
     }
 
     private fun doRetrofitWithCoroutine() {
@@ -93,7 +88,6 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
         Log.e("ResultFragment", "${args.imgUrl}")
 
         CoroutineScope(Dispatchers.Main).launch {
-
             // 응답 결과 가져오는 건 IO 스레드에서
             val response = withContext(Dispatchers.IO) {
                 mRESTApi.getSearchResult(requestBody)
@@ -112,7 +106,7 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
                         initRecyclerView(it.data)
                     }
                     else {
-                        ttsGuide = it.data.text
+                        ttsGuide = it.data.text.toString()
                         Log.e("검색 실패 후 인식한 글자: ", ttsGuide)
                         speakOut("해당 약을 찾지 못해 인식한 글자만 읽어드립니다. $ttsGuide")
                     }
@@ -183,6 +177,6 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
         super.onDestroyView()
         tts.stop()
         tts.shutdown()
-        _binding = null
+//        _binding = null
     }
 }

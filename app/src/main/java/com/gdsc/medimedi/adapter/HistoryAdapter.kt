@@ -3,45 +3,45 @@ package com.gdsc.medimedi.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
 import com.gdsc.medimedi.databinding.ListItemHistoryBinding
 import com.gdsc.medimedi.model.History
 
-class HistoryAdapter: RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
+class HistoryAdapter(private val onItemClicked: (position: Int) -> Unit) :
+    RecyclerView.Adapter<HistoryAdapter.MyViewHolder>() {
     var dataSet = mutableListOf<History>()
 
-    interface OnItemClickListener{
-        fun onItemClick(v: View, data: History, pos: Int)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val view =
+            ListItemHistoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return MyViewHolder(view, onItemClicked)
     }
 
-    private var listener: OnItemClickListener? = null
-    fun setOnItemClickListener(listener: OnItemClickListener){
-        this.listener = listener
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = ListItemHistoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.bind(dataSet[position])
+
     }
 
     override fun getItemCount(): Int = dataSet.size
 
-    inner class ViewHolder(val binding: ListItemHistoryBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: History){
-            binding.tvId.text = item.id.toString() // Int -> String
+    class MyViewHolder(
+        private val binding: ListItemHistoryBinding,
+        private val onItemClicked: (position: Int) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View) {
+            val pos = adapterPosition
+            onItemClicked(pos)
+        }
+
+        fun bind(item: History) {
             binding.tvName.text = item.name
             binding.tvDate.text = item.date
-
-            val pos = adapterPosition
-            if(pos != RecyclerView.NO_POSITION){
-                itemView.setOnClickListener{
-                    listener?.onItemClick(itemView, item, pos)
-                }
-            }
         }
     }
 }

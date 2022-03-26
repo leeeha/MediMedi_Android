@@ -1,5 +1,6 @@
 package com.gdsc.medimedi.retrofit
 
+import com.gdsc.medimedi.model.MedicineInfo
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Response
@@ -11,9 +12,9 @@ import java.util.concurrent.TimeUnit
 interface RESTApi {
     companion object {
         var okHttpClient = OkHttpClient.Builder()
-            .connectTimeout(60, TimeUnit.SECONDS)
-            .readTimeout(60, TimeUnit.SECONDS) // socket timeout
-            .writeTimeout(60, TimeUnit.SECONDS)
+            .connectTimeout(100, TimeUnit.SECONDS)
+            .readTimeout(100, TimeUnit.SECONDS) // socket timeout
+            .writeTimeout(100, TimeUnit.SECONDS)
             .build()
 
         val retrofit: Retrofit = Retrofit.Builder()
