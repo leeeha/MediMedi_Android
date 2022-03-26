@@ -54,6 +54,8 @@ class SettingsFragment : Fragment(), TextToSpeech.OnInitListener {
         binding.btnPrev.setOnClickListener{
             navController.popBackStack()
         }
+
+        // todo: 모드 선택에 따라 다르게 동작하도록
     }
 
     private fun setUserInfo() {
