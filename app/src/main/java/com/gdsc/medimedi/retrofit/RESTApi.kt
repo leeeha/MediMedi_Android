@@ -25,16 +25,15 @@ interface RESTApi {
             .build()
     }
 
-    // CoroutineScope 안에서 사용하려면 suspend 키워드 붙여줘야 함.
-    // 코루틴 블록을 잠시 빠져나와 비동기적으로 suspend 함수 실행 후, 다시 블록으로 돌아가 그 다음 코드 실행
     @POST("user")
     fun sendUserInfo(@Body loginRequest: LoginRequest): Call<LoginResponse>
 
+    // CoroutineScope 안에서 사용하려면 suspend 키워드 붙여줘야 함.
     @POST("search")
     suspend fun getSearchResult(@Body searchRequest: SearchRequest): Response<SearchResponse>
 
     @GET("history/list/{token}")
-    suspend fun getSearchHistory(@Path("token") token: String?): Response<HistoryResponse>
+    fun getSearchHistory(@Path("token") token: String?): Call<HistoryResponse>
 
     @GET("history/detail/{id}")
     fun getHistoryDetail(@Path("id") id: Int): Call<DetailResponse>

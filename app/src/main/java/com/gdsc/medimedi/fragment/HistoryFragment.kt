@@ -7,18 +7,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gdsc.medimedi.adapter.HistoryAdapter
 import com.gdsc.medimedi.databinding.FragmentHistoryBinding
 import com.gdsc.medimedi.model.History
+import com.gdsc.medimedi.retrofit.HistoryResponse
 import com.gdsc.medimedi.retrofit.RESTApi
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import kotlinx.coroutines.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 
 class HistoryFragment : Fragment(), TextToSpeech.OnInitListener {
@@ -45,29 +46,35 @@ class HistoryFragment : Fragment(), TextToSpeech.OnInitListener {
         navController = Navigation.findNavController(view)
         tts = TextToSpeech(this.context, this)
 
-        doRetrofitWithCoroutine()
+        doRetrofit()
     }
 
-    private fun doRetrofitWithCoroutine() {
-        CoroutineScope(Dispatchers.Main).launch{
-            // 서버에서 검색 기록 조회하기
-            val response = withContext(Dispatchers.IO) {
-                val account = GoogleSignIn.getLastSignedInAccount(requireActivity())
-                mRESTApi.getSearchHistory(account?.idToken)
-            }
-
-            // ui 작업은 메인 스레드에서
-            if(response.isSuccessful){ // 레트로핏 성공
-                response.body()?.let {
-                    if(it.success && it.data.isNotEmpty()){
-                        Log.e("Retrofit", "검색 기록 조회 성공")
-                        initRecyclerView(it.data)
-                    }else{
-                        Log.e("Retrofit", "검색 기록 조회 실패 or 결과 없음")
+    private fun doRetrofit() {
+        val account = GoogleSignIn.getLastSignedInAccount(requireActivity())
+        mRESTApi.getSearchHistory(account?.idToken).enqueue(object : Callback<HistoryResponse> {
+            override fun onResponse(
+                call: Call<HistoryResponse>,
+                response: Response<HistoryResponse>
+            ) {
+                // ui 작업은 메인 스레드에서
+                if (response.isSuccessful) { // 레트로핏 성공
+                    response.body()?.let {
+                        if (it.success && it.data.isNotEmpty()) {
+                            Log.e("Retrofit", "검색 기록 조회 성공")
+                            initRecyclerView(it.data)
+                        } else {
+                            Log.e("Retrofit", "검색 기록 조회 실패 or 결과 없음")
+                        }
                     }
                 }
             }
-        }
+
+            override fun onFailure(call: Call<HistoryResponse>, t: Throwable) {
+                Log.e("Retrofit", t.message.toString())
+            }
+
+        })
+
     }
 
     private fun initRecyclerView(data: MutableList<History>) {
@@ -86,7 +93,7 @@ class HistoryFragment : Fragment(), TextToSpeech.OnInitListener {
         historyAdapter.dataSet = dataSet
     }
 
-    // todo: id값 넘겨주면서 Detail 화면으로 이동
+    // id값 넘겨주면서 Detail 화면으로 이동
     private fun onListItemClick(pos: Int) {
         val itemId = dataSet[pos].id
         val itemName = dataSet[pos].name
