@@ -34,7 +34,7 @@ class HistoryAdapter: RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
         fun bind(item: History){
             binding.tvId.text = item.id.toString() // Int -> String
             binding.tvName.text = item.name
-            binding.tvDate.text = item.date
+            binding.tvDate.text = item.date.toString() // Date -> String
 
             val pos = adapterPosition
             if(pos != RecyclerView.NO_POSITION){

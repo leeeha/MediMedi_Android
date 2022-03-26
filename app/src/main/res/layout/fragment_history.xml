@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
     tools:context=".fragment.HistoryFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -43,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="최근 검색 기록입니다."
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -51,7 +50,6 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_history"
-            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"

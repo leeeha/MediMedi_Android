@@ -80,14 +80,14 @@ class HistoryFragment : Fragment(), TextToSpeech.OnInitListener {
 
                     response.body()?.let {
                         if(it.success && it.data.isNotEmpty()){ // 기록 조회 성공
-                            for(i in 0..it.data.size){
+                            for(i in 0 until it.data.size){
                                 val id = it.data[i].id
                                 val name = it.data[i].name
                                 val date = it.data[i].date
-                                dataSet.add(History(id, name, date))
+                                dataSet.add(i, History(id, name, date))
                             }
-                            historyAdapter.dataSet = dataSet
 
+                            historyAdapter.dataSet = dataSet
                         }else{ // 기록 조회 실패
                             Log.e("Retrofit", "레트로핏은 성공했지만, 기록 조회 실패")
                         }
@@ -96,7 +96,7 @@ class HistoryFragment : Fragment(), TextToSpeech.OnInitListener {
             }
 
             override fun onFailure(call: Call<HistoryResponse>, t: Throwable) {
-                Log.e("Retrofit", t.message.toString())
+                Log.e("Retrofit Fail", t.message.toString())
             }
         })
     }

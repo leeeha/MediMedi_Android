@@ -63,7 +63,7 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
 
     // todo: Undefined여도 어떤 객체가 감지되긴 한 거니까 캡쳐 범위에 포함시키자
     private val boxList = listOf("Packaged goods", "Box", "Business card", "Container")
-    private var imgUrl: String? = null // s3 이미지 url
+    private lateinit var imgUrl: String // s3 이미지 url
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -235,7 +235,7 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
 
                     val fileName = "$time$userId.jpg"
                     imgUrl = "$s3Url$time$userId.jpg"
-                    Log.e("SearchFragment", imgUrl!!)
+                    Log.e("SearchFragment", imgUrl)
 
                     // s3에 이미지 올리기
                     uploadImageToS3(fileName, tempFile)
@@ -257,7 +257,7 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
         val transferUtility = TransferUtility.builder().s3Client(s3Client).context(
             requireActivity().applicationContext
         ).build()
-        TransferNetworkLossHandler.getInstance(requireActivity().applicationContext)
+        TransferNetworkLossHandler.getInstance(requireContext()) // 여기서 컨텍스트만 바꾸고 + 모델 가볍게
 
         val uploadObserver = transferUtility.upload(
             "medimedi",
@@ -303,7 +303,6 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
     private fun speakOut(text: String) {
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
