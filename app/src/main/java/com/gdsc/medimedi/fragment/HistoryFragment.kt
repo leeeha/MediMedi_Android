@@ -84,6 +84,8 @@ class HistoryFragment : Fragment(), TextToSpeech.OnInitListener {
                                 val id = it.data[i].id
                                 val name = it.data[i].name
                                 val date = it.data[i].date
+                                Log.e("Retrofit", "${id}, ${name}, ${date}")
+
                                 dataSet.add(i, History(id, name, date))
                             }
 
