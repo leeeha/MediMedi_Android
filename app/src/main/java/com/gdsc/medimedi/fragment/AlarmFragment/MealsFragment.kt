@@ -47,11 +47,11 @@ class MealsFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListe
         when(v?.id){
             R.id.btn_twice -> {
                 val action = MealsFragmentDirections.actionMealsFragmentToAlarmFragment(25,2, "알람 화면 입니다.")
-                findNavController().navigate(action)
+                navController.navigate(action)
             }
             R.id.btn_three_times -> {
                 val action = MealsFragmentDirections.actionMealsFragmentToAlarmFragment(25,3,"알람 화면 입니다.")
-                findNavController().navigate(action)
+                navController.navigate(action)
             }
         }
     }

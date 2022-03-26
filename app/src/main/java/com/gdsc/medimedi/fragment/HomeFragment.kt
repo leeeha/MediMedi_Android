@@ -83,7 +83,7 @@ class HomeFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListen
             }
             R.id.btn_alarm -> {
                 val action = HomeFragmentDirections.actionHomeFragmentToAlarmFragment(0,0,"약 알림받기")
-                findNavController().navigate(action)
+                navController.navigate(action)
             }
             R.id.btn_history -> {
                 val action = HomeFragmentDirections.actionHomeFragmentToHistoryFragment("검색 기록 조회하기")

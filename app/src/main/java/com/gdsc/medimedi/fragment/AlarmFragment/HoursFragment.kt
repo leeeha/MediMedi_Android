@@ -48,7 +48,7 @@ class HoursFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListe
             R.id.btn_make -> {
                 val action = HoursFragmentDirections.actionHoursFragmentToAlarmFragment(
                     binding.numHours.value,0, "알람 화면 입니다.")
-                findNavController().navigate(action)
+                navController.navigate(action)
             }
         }
     }

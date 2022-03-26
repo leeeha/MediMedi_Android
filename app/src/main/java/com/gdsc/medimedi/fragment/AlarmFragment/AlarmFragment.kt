@@ -66,7 +66,6 @@ class AlarmFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListe
 
         binding.btnNewAlarm.setOnClickListener(this)
         binding.btnCancelAlarm.setOnClickListener(this)
-        //TODO 뒤로가기 눌렀을 때 홈화면으로 나가기
 
         settingAlarm()
         binding.alarmtext.text = alarmmaintext
@@ -81,7 +80,7 @@ class AlarmFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListe
             override fun handleOnBackPressed() {
                 val action =
                     AlarmFragmentDirections.actionAlarmFragmentToHomeFragment()
-                findNavController().navigate(action)
+                navController.navigate(action)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
@@ -98,7 +97,7 @@ class AlarmFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListe
             R.id.btn_new_alarm -> {
                 val action =
                     AlarmFragmentDirections.actionAlarmFragmentToAlarmTypeFragment("새로운 알람")
-                findNavController().navigate(action)
+                navController.navigate(action)
             }
             R.id.btn_cancel_alarm -> {
                 // 알람 취소
@@ -127,7 +126,7 @@ class AlarmFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListe
                 Log.d("alarmmaintext","${alarmmaintext}")
                 val action =
                     AlarmFragmentDirections.actionAlarmFragmentToHomeFragment()
-                findNavController().navigate(action) // todo 화면 새로고침? 텍스트 변경 반영 안 됨 일단 홈화면으로 넘어감
+                navController.navigate(action) // todo 화면 새로고침? 텍스트 변경 반영 안 됨 일단 홈화면으로 넘어감
                 Log.d("AlarmFragment","refresh!")
             }
         }

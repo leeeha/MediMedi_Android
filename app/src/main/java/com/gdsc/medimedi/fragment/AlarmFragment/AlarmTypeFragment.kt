@@ -49,11 +49,11 @@ class AlarmTypeFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitL
         when(v?.id){
             R.id.btn_for_hours -> {
                 val action = AlarmTypeFragmentDirections.actionAlarmTypeFragmentToHoursFragment("알람이 반복될 시간을 골라주세요.")
-                findNavController().navigate(action)
+                navController.navigate(action)
             }
             R.id.btn_meals -> {
                 val action = AlarmTypeFragmentDirections.actionAlarmTypeFragmentToMealsFragment("1일 복용 횟수를 골라주세요.")
-                findNavController().navigate(action)
+                navController.navigate(action)
             }
         }
     }
