@@ -21,8 +21,9 @@ import java.util.*
 class HomeFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListener{
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private lateinit var navController : NavController
     private val args: HomeFragmentArgs by navArgs()
+
+    private lateinit var navController : NavController
     private lateinit var tts: TextToSpeech
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,7 +81,7 @@ class HomeFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListen
                 findNavController().navigate(action)
             }
             R.id.btn_alarm -> {
-                val action = HomeFragmentDirections.actionHomeFragmentToAlarmFragment("약 알림받기")
+                val action = HomeFragmentDirections.actionHomeFragmentToAlarmFragment(0,0,"약 알림받기")
                 findNavController().navigate(action)
             }
             R.id.btn_history -> {

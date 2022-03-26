@@ -29,61 +29,47 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <TextView
-        android:id="@+id/alarmtext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="168dp"
-        android:textColor="@color/white"
-        android:textSize="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/app_bar" />
-
-
     <LinearLayout
-        android:id="@+id/btn_new_alarm"
-        android:layout_width="326dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="48dp"
+        android:id="@+id/btn_twice"
+        android:layout_width="391dp"
+        android:layout_height="254dp"
+        android:layout_marginBottom="72dp"
         android:background="@drawable/background_border"
         android:orientation="vertical"
-        android:paddingVertical="34dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_cancel_alarm"
+        android:paddingVertical="90dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_three_times"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="NEW ALARM"
+            android:text="twice a day"
             android:textColor="@color/white"
-            android:textSize="24dp" />
+            android:textSize="40dp" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/btn_cancel_alarm"
-        android:layout_width="328dp"
-        android:layout_height="95dp"
+        android:id="@+id/btn_three_times"
+        android:layout_width="391dp"
+        android:layout_height="254dp"
         android:layout_marginBottom="48dp"
         android:background="@drawable/background_border"
         android:orientation="vertical"
-        android:paddingVertical="34dp"
+        android:paddingVertical="90dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="CANCEL ALARM"
+            android:text="three times a day"
             android:textColor="@color/white"
-            android:textSize="24sp" />
+            android:textSize="40dp" />
     </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -36,6 +36,7 @@ class SettingsFragment : Fragment(), TextToSpeech.OnInitListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         navController = Navigation.findNavController(view)
         tts = TextToSpeech(this.context, this)
 

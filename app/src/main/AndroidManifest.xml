@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <!-- 카메라 권한 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -27,6 +28,15 @@
         android:theme="@style/Theme.MediMedi"
         android:usesCleartextTraffic="true"
         tools:targetApi="n">
+        <receiver
+            android:name=".broadcastReceiver.MyReceiver"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+
+        </receiver>
 
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
@@ -44,8 +54,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="true" />
-
+            android:exported="true" /> <!-- 카메라로 사진 찍고 원본 형태를 유지하기 위해 필요한 FileProvider 구성 -->
     </application>
 
 </manifest>

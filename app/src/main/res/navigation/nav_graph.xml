@@ -83,14 +83,28 @@
 
     <fragment
         android:id="@+id/alarmFragment"
-        android:name="com.gdsc.medimedi.fragment.AlarmFragment"
+        android:name="com.gdsc.medimedi.fragment.AlarmFragment.AlarmFragment"
         android:label="fragment_alarm"
         tools:layout="@layout/fragment_alarm">
+        <argument
+            android:name="hours"
+            app:argType="integer"
+            android:defaultValue="0"/>
+        <argument
+            android:name="meals"
+            app:argType="integer"
+            android:defaultValue="0"/>
         <argument
             android:name="tts"
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_alarmFragment_to_alarmTypeFragment"
+            app:destination="@id/alarmTypeFragment" />
+        <action
+            android:id="@+id/action_alarmFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 
     <fragment
@@ -113,6 +127,7 @@
         android:name="com.gdsc.medimedi.fragment.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings">
+
         <argument
             android:name="tts"
             app:argType="string"
@@ -151,6 +166,50 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/alarmTypeFragment"
+        android:name="com.gdsc.medimedi.fragment.AlarmFragment.AlarmTypeFragment"
+        android:label="AlarmTypeFragment" >
+        <argument
+            android:name="tts"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_alarmTypeFragment_to_mealsFragment"
+            app:destination="@id/mealsFragment" />
+        <action
+            android:id="@+id/action_alarmTypeFragment_to_hoursFragment"
+            app:destination="@id/hoursFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/hoursFragment"
+        android:name="com.gdsc.medimedi.fragment.AlarmFragment.HoursFragment"
+        android:label="fragment_hours"
+        tools:layout="@layout/fragment_hours" >
+        <argument
+            android:name="tts"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_hoursFragment_to_alarmFragment"
+            app:destination="@id/alarmFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mealsFragment"
+        android:name="com.gdsc.medimedi.fragment.AlarmFragment.MealsFragment"
+        android:label="fragment_meals"
+        tools:layout="@layout/fragment_meals" >
+        <argument
+            android:name="tts"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_mealsFragment_to_alarmFragment"
+            app:destination="@id/alarmFragment" />
     </fragment>
 
 </navigation>

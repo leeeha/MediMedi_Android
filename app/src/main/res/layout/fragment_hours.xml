@@ -29,28 +29,28 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <TextView
-        android:id="@+id/alarmtext"
+
+    <NumberPicker
+        android:id="@+id/num_hours"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="168dp"
-        android:textColor="@color/white"
-        android:textSize="24dp"
+        android:layout_marginBottom="120dp"
+        android:solidColor="@color/white"
+        android:theme="@style/NumberPickerStyle"
+        app:layout_constraintBottom_toTopOf="@+id/btn_make"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/app_bar" />
-
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
-        android:id="@+id/btn_new_alarm"
+        android:id="@+id/btn_make"
         android:layout_width="326dp"
         android:layout_height="100dp"
-        android:layout_marginBottom="48dp"
+        android:layout_marginBottom="144dp"
         android:background="@drawable/background_border"
         android:orientation="vertical"
-        android:paddingVertical="34dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_cancel_alarm"
+        android:paddingVertical="27dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent">
@@ -59,31 +59,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="NEW ALARM"
+            android:text="SUBMIT"
             android:textColor="@color/white"
-            android:textSize="24dp" />
+            android:textSize="35dp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/btn_cancel_alarm"
-        android:layout_width="328dp"
-        android:layout_height="95dp"
-        android:layout_marginBottom="48dp"
-        android:background="@drawable/background_border"
-        android:orientation="vertical"
-        android:paddingVertical="34dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="CANCEL ALARM"
-            android:textColor="@color/white"
-            android:textSize="24sp" />
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
