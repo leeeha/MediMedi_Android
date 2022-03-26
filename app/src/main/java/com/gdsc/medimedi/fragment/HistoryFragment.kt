@@ -9,31 +9,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gdsc.medimedi.adapter.HistoryAdapter
 import com.gdsc.medimedi.databinding.FragmentHistoryBinding
 import com.gdsc.medimedi.model.History
-import com.gdsc.medimedi.retrofit.HistoryResponse
 import com.gdsc.medimedi.retrofit.RESTApi
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.*
 import java.util.*
 
 class HistoryFragment : Fragment(), TextToSpeech.OnInitListener {
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
     private val args: HistoryFragmentArgs by navArgs()
-
     private lateinit var navController : NavController
     private lateinit var tts: TextToSpeech
 
-    private var historyAdapter = HistoryAdapter()
+    private lateinit var historyAdapter: HistoryAdapter
     private val dataSet = mutableListOf<History>()
     private val mRESTApi = RESTApi.retrofit.create(RESTApi::class.java)
 
@@ -50,57 +44,59 @@ class HistoryFragment : Fragment(), TextToSpeech.OnInitListener {
         navController = Navigation.findNavController(view)
         tts = TextToSpeech(this.context, this)
 
-        initRecyclerView()
-
-        historyAdapter.setOnItemClickListener(object : HistoryAdapter.OnItemClickListener{
-            override fun onItemClick(v: View, data: History, pos: Int) {
-                // 인덱스와 약 이름 전달하기
-                val action = HistoryFragmentDirections.actionHistoryFragmentToDetailFragment(pos, dataSet[pos].name)
-                findNavController().navigate(action)
-            }
-        })
+        doRetrofitWithCoroutine()
+//
+//        historyAdapter.setOnItemClickListener(object : HistoryAdapter.OnItemClickListener{
+//            override fun onItemClick(v: View, data: History, pos: Int) {
+//                // 인덱스와 약 이름 전달하기
+//                val action = HistoryFragmentDirections.actionHistoryFragmentToDetailFragment(pos, dataSet[pos].name)
+//                findNavController().navigate(action)
+//            }
+//        })
     }
 
-    private fun initRecyclerView() {
-        val recyclerView = binding.rvHistory
-        recyclerView.adapter = historyAdapter
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        val dividerItemDecoration = DividerItemDecoration(recyclerView.context,
-            LinearLayoutManager(requireContext()).orientation)
-        recyclerView.addItemDecoration(dividerItemDecoration)
+    private fun doRetrofitWithCoroutine() {
+        CoroutineScope(Dispatchers.Main).launch{
+            // 서버에서 검색 기록 조회하기
+            val response = withContext(Dispatchers.IO) {
+                val account = GoogleSignIn.getLastSignedInAccount(requireActivity())
+                mRESTApi.getSearchHistory(account?.idToken)
+            }
 
-        val account = GoogleSignIn.getLastSignedInAccount(requireActivity())
-        mRESTApi.getSearchHistory(account?.idToken).enqueue(object: Callback<HistoryResponse> {
-            override fun onResponse(
-                call: Call<HistoryResponse>,
-                response: Response<HistoryResponse>
-            ) {
-                if(response.isSuccessful){ // 레트로핏 성공
-                    Log.e("Retrofit", "Success")
-
-                    response.body()?.let {
-                        if(it.success && it.data.isNotEmpty()){ // 기록 조회 성공
-                            for(i in 0 until it.data.size){
-                                val id = it.data[i].id
-                                val name = it.data[i].name
-                                val date = it.data[i].date
-                                Log.e("Retrofit", "${id}, ${name}, ${date}")
-
-                                dataSet.add(i, History(id, name, date))
-                            }
-
-                            historyAdapter.dataSet = dataSet
-                        }else{ // 기록 조회 실패
-                            Log.e("Retrofit", "레트로핏은 성공했지만, 기록 조회 실패")
-                        }
+            // ui 작업은 메인 스레드에서
+            if(response.isSuccessful){ // 레트로핏 성공
+                response.body()?.let {
+                    if(it.success && it.data.isNotEmpty()){
+                        Log.e("Retrofit", "검색 기록 조회 성공")
+                        initRecyclerView(it.data)
+                    }else{
+                        Log.e("Retrofit", "검색 기록 조회 실패 or 결과 없음")
                     }
                 }
             }
+        }
+    }
 
-            override fun onFailure(call: Call<HistoryResponse>, t: Throwable) {
-                Log.e("Retrofit Fail", t.message.toString())
-            }
-        })
+    private fun initRecyclerView(data: MutableList<History>) {
+        val recyclerView = binding.rvHistory
+        historyAdapter = HistoryAdapter()
+        recyclerView.adapter = historyAdapter
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        val dividerItemDecoration = DividerItemDecoration(requireContext(),
+            LinearLayoutManager(requireContext()).orientation)
+        recyclerView.addItemDecoration(dividerItemDecoration)
+
+        dataSet.add(History("번호", "이름", "날짜"))
+
+        for(i in 0 until data.size){
+            val id = data[i].id
+            val name = data[i].name
+            val date = data[i].date
+            Log.e("Retrofit", "${id}, ${name}, ${date}")
+
+            dataSet.add(History(id, name, date))
+        }
+        historyAdapter.dataSet = dataSet
     }
 
     override fun onInit(status: Int) {

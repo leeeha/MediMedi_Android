@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
     android:padding="16dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -10,8 +9,9 @@
         android:id="@+id/tv_id"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_width="wrap_content"
+        android:layout_width="30dp"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="번호"/>
 
     <TextView
@@ -19,17 +19,18 @@
         app:layout_constraintStart_toEndOf="@id/tv_id"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="16dp"
-        android:layout_width="wrap_content"
+        android:textColor="@color/black"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="제품명"/>
 
     <TextView
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:id="@+id/tv_date"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_gravity="end"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="날짜"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

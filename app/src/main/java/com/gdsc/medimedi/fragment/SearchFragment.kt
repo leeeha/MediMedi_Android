@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.amazonaws.auth.BasicAWSCredentials
@@ -183,9 +184,9 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
 
                             // todo: 약 상자처럼 생긴 물체가 감지될 경우, 이미지 캡처하여 결과 화면으로 넘어가기
                             //  더블클릭 한 것처럼, 네비게이션이 2번 이상 호출되면 action의 아이디 값이 유효하지 않을 수 있음.
-//                            if (boxList.contains(objectLabel)) {
-//                                takePhoto()
-//                            }
+                            if (boxList.contains(objectLabel)) {
+                                takePhoto()
+                            }
                         }
 
                         imageProxy.close()
@@ -273,7 +274,7 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
 
                     // 결과 화면으로 넘어가기 (이미지 url 전달)
                     val action = SearchFragmentDirections.actionSearchFragmentToResultFragment(imgUrl)
-                    navController.navigate(action)
+                    navController.safeNavigation(action)
                 }
             }
 
@@ -286,6 +287,14 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
                 Log.w("AmazonS3", "UPLOAD ERROR --- ID: ${id}, exception: ${ex}")
             }
         })
+    }
+
+    private fun NavController.safeNavigation(action: NavDirections) {
+        Log.d("Doubling Check", "Click happened")
+        currentDestination?.getAction(action.actionId)?.run {
+            Log.d("Doubling Check", "Click Propagated")
+            navigate(action)
+        }
     }
 
     // tts 객체 초기화
@@ -311,3 +320,4 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
 //        _binding = null
     }
 }
+

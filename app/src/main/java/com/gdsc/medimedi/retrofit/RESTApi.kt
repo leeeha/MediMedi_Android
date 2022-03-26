@@ -11,9 +11,9 @@ import java.util.concurrent.TimeUnit
 interface RESTApi {
     companion object {
         var okHttpClient = OkHttpClient.Builder()
-            .connectTimeout(100, TimeUnit.SECONDS)
-            .readTimeout(100, TimeUnit.SECONDS) // socket timeout
-            .writeTimeout(100, TimeUnit.SECONDS)
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS) // socket timeout
+            .writeTimeout(60, TimeUnit.SECONDS)
             .build()
 
         val retrofit: Retrofit = Retrofit.Builder()
@@ -33,7 +33,7 @@ interface RESTApi {
     suspend fun getSearchResult(@Body searchRequest: SearchRequest): Response<SearchResponse>
 
     @GET("history/list/{token}")
-    fun getSearchHistory(@Path("token") token: String?): Call<HistoryResponse>
+    suspend fun getSearchHistory(@Path("token") token: String?): Response<HistoryResponse>
 
     @GET("history/detail/{id}")
     fun getHistoryDetail(@Path("id") id: Int): Call<DetailResponse>
