@@ -32,7 +32,7 @@ class DetailFragment : Fragment(), TextToSpeech.OnInitListener {
     private lateinit var tts: TextToSpeech
 
     private lateinit var detailAdapter: DetailAdapter
-    private val dataSet = mutableListOf<Detail>()
+    private lateinit var dataSet: MutableList<Detail>
     private val mRESTApi = RESTApi.retrofit.create(RESTApi::class.java)
     private val cateList = listOf("제품명", "회사명", "효능∙효과", "사용법", "주의사항", "경고", "상호작용", "부작용", "보관법")
 
@@ -49,6 +49,7 @@ class DetailFragment : Fragment(), TextToSpeech.OnInitListener {
         navController = Navigation.findNavController(view)
         tts = TextToSpeech(this.context, this)
         binding.tvTitle.text = args.title
+        dataSet = mutableListOf() // 여기서 리스트 초기화
 
         doRetrofit()
 
@@ -87,8 +88,6 @@ class DetailFragment : Fragment(), TextToSpeech.OnInitListener {
         val dividerItemDecoration = DividerItemDecoration(requireContext(),
             LinearLayoutManager(requireContext()).orientation)
         recyclerView.addItemDecoration(dividerItemDecoration)
-
-        Log.e("Retrofit", "최근 검색일: ${data.date}")
 
         dataSet.apply {
             add(Detail(cateList[0], data.name))

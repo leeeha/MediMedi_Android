@@ -37,7 +37,7 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
     // 리사이클러뷰
     private val mRESTApi = RESTApi.retrofit.create(RESTApi::class.java)
     private val cateList = listOf("제품명", "회사명", "효능∙효과", "사용법", "주의사항", "경고", "상호작용", "부작용", "보관법")
-    private val dataSet = mutableListOf<Result>()
+    private lateinit var dataSet: MutableList<Result>
 
     // 음성으로 제공할 약 정보 (제품명, 효능효과, 사용법)
     private lateinit var ttsGuide: String
@@ -68,6 +68,7 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
         tts = TextToSpeech(this.context, this)
+        dataSet = mutableListOf() // 여기서 리스트 초기화
 
         doRetrofit()
 
@@ -112,7 +113,7 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
                         }
                     }
                 } else {
-                    Log.e("Retrofit", "Error: ${response.errorBody()}")
+                    Log.e("Retrofit", "ResultFragment Error")
                 }
             }
 
@@ -123,16 +124,6 @@ class ResultFragment : Fragment(), TextToSpeech.OnInitListener {
     }
 
     private fun initRecyclerView(data: MedicineInfo) {
-        Log.e("제품명", data.name)
-        Log.e("회사명", data.entp)
-        Log.e("효능 효과", data.effect)
-        Log.e("사용법", data.usingMethod)
-        Log.e("주의사항", data.caution)
-        Log.e("경고", data.notice)
-        Log.e("상호작용", data.interact)
-        Log.e("부작용", data.sideEffect)
-        Log.e("보관 방법", data.storageMethod)
-
         val recyclerView = binding.rvResult
         resultAdapter = ResultAdapter()
         recyclerView.adapter = resultAdapter

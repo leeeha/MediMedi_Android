@@ -18,6 +18,7 @@
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/drawable/ic_alarm.xml" value="0.212" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/drawable/ic_back_btn.xml" value="0.21" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/drawable/ic_baseline_medical_services_24.xml" value="0.136" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/drawable/ic_btn_add.xml" value="0.259" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/drawable/ic_camera.xml" value="0.21" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/drawable/ic_history.xml" value="0.21" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/drawable/ic_history_small.xml" value="0.21" />
@@ -38,13 +39,17 @@
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/activity_splash.xml" value="0.2" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/activity_test.xml" value="0.19623770842240273" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_alarm.xml" value="0.264" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_alarm_demo.xml" value="0.22546296296296298" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_alarm_type.xml" value="0.22546296296296298" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_blank.xml" value="0.20820863616930313" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_detail.xml" value="0.22546296296296298" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_detail_history.xml" value="0.22546296296296298" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_history.xml" value="0.2" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_home.xml" value="0.264" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_hours.xml" value="0.22546296296296298" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_login.xml" value="0.264" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_manual.xml" value="0.2" />
+        <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_meals.xml" value="0.22546296296296298" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_menu.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_result.xml" value="0.2" />
         <entry key="..\:/Users/USER/AndroidStudioProjects/MediMedi_Android/app/src/main/res/layout/fragment_search.xml" value="0.264" />

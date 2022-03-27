@@ -30,7 +30,7 @@ class HistoryFragment : Fragment(), TextToSpeech.OnInitListener {
     private lateinit var tts: TextToSpeech
 
     private lateinit var historyAdapter: HistoryAdapter
-    private val dataSet = mutableListOf<History>()
+    private lateinit var dataSet: MutableList<History>
     private val mRESTApi = RESTApi.retrofit.create(RESTApi::class.java)
 
     override fun onCreateView(
@@ -46,6 +46,10 @@ class HistoryFragment : Fragment(), TextToSpeech.OnInitListener {
         navController = Navigation.findNavController(view)
         tts = TextToSpeech(this.context, this)
 
+        // 주의: 이 리스트를 위에서 변수 선언할 때 초기화를 해버리면
+        // 프래그먼트가 생성될 때마다 리스트에 동일한 아이템이 계속 추가됨.
+        dataSet = mutableListOf()
+
         doRetrofit()
     }
 
@@ -56,7 +60,6 @@ class HistoryFragment : Fragment(), TextToSpeech.OnInitListener {
                 call: Call<HistoryResponse>,
                 response: Response<HistoryResponse>
             ) {
-                // ui 작업은 메인 스레드에서
                 if (response.isSuccessful) { // 레트로핏 성공
                     response.body()?.let {
                         if (it.success && it.data.isNotEmpty()) {
