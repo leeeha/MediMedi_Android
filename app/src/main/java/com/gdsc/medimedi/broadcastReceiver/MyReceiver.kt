@@ -23,6 +23,8 @@ class Data{
     companion object{
         var NOTIFICATION_ID = 0
         var CHANNEL_ID = "medimedi_channel"
+
+        var curAlarm = "None"
     }
 }
 

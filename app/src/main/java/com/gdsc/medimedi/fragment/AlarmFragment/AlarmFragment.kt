@@ -15,13 +15,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.gdsc.medimedi.R
 import com.gdsc.medimedi.broadcastReceiver.Data.Companion.NOTIFICATION_ID
+import com.gdsc.medimedi.broadcastReceiver.Data.Companion.curAlarm
 import com.gdsc.medimedi.broadcastReceiver.MyReceiver
 import com.gdsc.medimedi.databinding.FragmentAlarmBinding
 import java.util.*
@@ -101,38 +100,19 @@ class AlarmFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListe
             }
             R.id.btn_cancel_alarm -> {
                 // 알람 취소
-                when(args.hours){
-                    0 -> {
-                    }
-                    25 -> {
-                        if (args.meals == 2){
-                            cancelAlarm(2)
-                            cancelAlarm(3)
-
-                        }
-                        else if (args.meals == 3) {
-                            cancelAlarm(2)
-                            cancelAlarm(3)
-                            cancelAlarm(4)
-                        }
-
-                    }
-                    else -> { // 1~24?
-                        cancelAlarm(1)
-                    }
-
-                }
+                removeAlarm()
                 alarmmaintext = "None"
-                Log.d("alarmmaintext","${alarmmaintext}")
-                val action =
-                    AlarmFragmentDirections.actionAlarmFragmentToHomeFragment()
-                navController.navigate(action) // todo 화면 새로고침? 텍스트 변경 반영 안 됨 일단 홈화면으로 넘어감
-                Log.d("AlarmFragment","refresh!")
+                binding.alarmtext.text = alarmmaintext
+                Log.d("AlarmFragment", "refresh!")
             }
         }
     }
 
-    private fun settingAlarm() {
+    private fun settingAlarm() { //이미 알람이 설정 되어있을 때 취소해줘야 함
+        if(curAlarm != "None") {
+            removeAlarm()
+            Log.d("settingAlarm", "After removeAlarm, curAlarm is ${curAlarm}")
+        }
         when (args.hours) {
             0 -> {
                 alarmmaintext = "None"
@@ -144,6 +124,27 @@ class AlarmFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListe
                 hoursAlarm()
             }
         }
+        Log.d("settingAlarm", "curAlarm is ${curAlarm}")
+    }
+
+    private fun removeAlarm(){
+        when (curAlarm) {
+            "2 meals" -> {
+                cancelAlarm(2)
+                cancelAlarm(3)
+            }
+            "3 meals" -> {
+                cancelAlarm(2)
+                cancelAlarm(3)
+                cancelAlarm(4)
+
+            }
+            "hours" -> { // 1~24?
+                cancelAlarm(1)
+            }
+        }
+        curAlarm = "None"
+        Log.d("RemoveAlarm", "cancel!")
     }
 
     private fun cancelAlarm(id: Int) {
@@ -158,7 +159,7 @@ class AlarmFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListe
         ) // 있으면 가져오고 없으면 안만든다. (null)
 
         pendingIntent?.cancel() // 기존 알람 삭제
-        Log.d("CANCEL","cancel $id")
+        Log.d("CANCEL", "cancel $id")
     }
 
     private fun hoursAlarm() {
@@ -184,6 +185,8 @@ class AlarmFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListe
         val toastMessage = "${repeatInterval / (3600 * 1000)}시간마다 알림이 발생합니다."
         Toast.makeText(activity, toastMessage, Toast.LENGTH_SHORT).show()
 
+        // 현재 알람 상태
+        curAlarm = "hours"
     }
 
     private fun mealsAlarm() {
@@ -196,7 +199,8 @@ class AlarmFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListe
 
                 val toastMessage = "아침, 저녁에 알람이 울립니다."
 
-                Toast.makeText(activity,toastMessage, Toast.LENGTH_SHORT ).show()
+                Toast.makeText(activity, toastMessage, Toast.LENGTH_SHORT).show()
+                curAlarm = "2 meals"
 
             }
 
@@ -204,12 +208,13 @@ class AlarmFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListe
                 alarmmaintext = "The alarm rings three times a day."
                 // 아침 7:00 점심 12:00 저녁 6:00 울리기
                 // 아침 7:00 저녁 6:00 울리기
-                updateAlarm(2,7) //2번 7시 알람
+                updateAlarm(2, 7) //2번 7시 알람
                 updateAlarm(3, 12) //3번 12시 알람
                 updateAlarm(4, 18) //4번 18시 알람
 
                 val toastMessage = "아침, 점심, 저녁에 알람이 울립니다."
-                Toast. makeText(activity, toastMessage, Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, toastMessage, Toast.LENGTH_SHORT).show()
+                curAlarm = "3 meals"
             }
 
         }
