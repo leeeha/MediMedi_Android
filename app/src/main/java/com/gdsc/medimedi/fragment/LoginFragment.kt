@@ -14,9 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.gdsc.medimedi.R
 import com.gdsc.medimedi.databinding.FragmentLoginBinding
-import com.gdsc.medimedi.retrofit.LoginRequest
-import com.gdsc.medimedi.retrofit.LoginResponse
-import com.gdsc.medimedi.retrofit.RESTApi
+import com.gdsc.medimedi.retrofit.*
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -133,8 +131,33 @@ class LoginFragment : Fragment(), TextToSpeech.OnInitListener {
 
         } else { // 로그인 성공 (서버에 유저 정보 보낸 뒤 홈화면으로 넘어가기)
             Log.e("SignIn", "Success")
-            doRetrofit(account)
+            checkRetrofit(account)
         }
+    }
+
+    private fun checkRetrofit(account: GoogleSignInAccount) {
+        mRESTApi.checkUserInfo(account?.idToken).enqueue(object : Callback<CheckResponse>{
+            override fun onResponse(call: Call<CheckResponse>, response: Response<CheckResponse>) {
+                if (response.isSuccessful){ //레트로핏 성공
+                    if (response.body()?.success == true){
+                        if (response.body()?.data?.is_joined == true){
+                            Log.e("Retrofit", "서버에 이미 회원가입함.")
+                        } else {
+                            doRetrofit(account)
+                            Log.e("Retrofit", "서버에 정보가 없음.")
+                        }
+                    } else {
+                        Log.e("Retrofit", "Fail")
+                    }
+
+                }
+            }
+
+            override fun onFailure(call: Call<CheckResponse>, t: Throwable) {
+                Log.e("Retrofit", t.message.toString())
+            }
+        })
+
     }
 
     private fun doRetrofit(account: GoogleSignInAccount) {

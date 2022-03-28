@@ -237,11 +237,6 @@ class AlarmFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListe
         )
     }
 
-    private fun refreshFragment() {
-        val ft = requireFragmentManager().beginTransaction()
-        ft.detach(this).attach(this).commit()
-    }
-
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
             tts.language = Locale.KOREA

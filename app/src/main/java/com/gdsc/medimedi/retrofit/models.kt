@@ -1,5 +1,6 @@
 package com.gdsc.medimedi.retrofit
 
+import com.gdsc.medimedi.model.Check
 import com.gdsc.medimedi.model.History
 import com.gdsc.medimedi.model.MedicineInfo
 import com.google.gson.annotations.SerializedName
@@ -14,6 +15,12 @@ data class LoginResponse(
     val success: Boolean,
     val data: Unit
 )
+
+data class CheckResponse(
+    val success: Boolean,
+    val data: Check
+)
+
 
 // 검색
 data class SearchRequest(

@@ -28,6 +28,9 @@ interface RESTApi {
     @POST("user")
     fun sendUserInfo(@Body loginRequest: LoginRequest): Call<LoginResponse>
 
+    @GET("user/{token}")
+    fun checkUserInfo(@Path("token") token: String?) : Call<CheckResponse>
+
     @POST("search")
     fun getSearchResult(@Body searchRequest: SearchRequest): Call<SearchResponse>
 
