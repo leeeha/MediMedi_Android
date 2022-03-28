@@ -197,10 +197,12 @@ class SearchFragment : Fragment(), TextToSpeech.OnInitListener {
                             // After removing, we will add a new rectangle view to the parent view.
                             binding.layout.addView(element, 1)
 
-                            // todo: 약 상자처럼 생긴 물체가 감지될 경우, 이미지 캡처하여 결과 화면으로 넘어가기
-                            //  더블클릭 한 것처럼, 네비게이션이 2번 이상 호출되면 action의 아이디 값이 유효하지 않을 수 있음.
                             if (boxList.contains(objectLabel)) {
+                                // todo: 여기서 객체가 한번 감지되면, 아예 카메라를 닫아야 함. 그래야 여러번 안 찍힘.
                                 takePhoto()
+
+//                                Log.e("CameraX", "촬영 버튼을 눌러주세요.")
+//                                speakOut("촬영 버튼을 눌러주세요.")
                             }
                         }
 

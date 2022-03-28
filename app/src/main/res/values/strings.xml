@@ -7,4 +7,6 @@
         Just take a picture of the medicine box! Then we will provide you with detailed information about it!</string>
 
     <string name="web_client_id">95681778629-mffl7t74qrn9vmomk0narudg2863cb06.apps.googleusercontent.com</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

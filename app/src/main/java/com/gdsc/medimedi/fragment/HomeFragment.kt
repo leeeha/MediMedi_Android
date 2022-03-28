@@ -53,6 +53,7 @@ class HomeFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListen
                     alertDialog.show()
                 }
             }
+
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
 
@@ -82,7 +83,8 @@ class HomeFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListen
                 navController.navigate(action)
             }
             R.id.btn_alarm -> {
-                val action = HomeFragmentDirections.actionHomeFragmentToAlarmFragment(0,0,"약 알림받기")
+                //val action = HomeFragmentDirections.actionHomeFragmentToAlarmFragment(0,0,"약 알림받기")
+                val action = HomeFragmentDirections.actionHomeFragmentToAlarmDemoFragment("약 알림받기")
                 navController.navigate(action)
             }
             R.id.btn_history -> {

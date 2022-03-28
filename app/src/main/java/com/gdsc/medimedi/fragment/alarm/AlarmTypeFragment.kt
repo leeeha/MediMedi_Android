@@ -1,4 +1,4 @@
-package com.gdsc.medimedi.fragment.AlarmFragment
+package com.gdsc.medimedi.fragment.alarm
 
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
@@ -9,48 +9,43 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.gdsc.medimedi.R
-import com.gdsc.medimedi.databinding.FragmentMealsBinding
+import com.gdsc.medimedi.databinding.FragmentAlarmTypeBinding
 import java.util.*
 
-class MealsFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListener {
-    private var _binding: FragmentMealsBinding? = null
+class AlarmTypeFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListener {
+    private var _binding: FragmentAlarmTypeBinding? = null
     private val binding get() = _binding!!
-    private val args: MealsFragmentArgs by navArgs()
-
+    private val args: AlarmTypeFragmentArgs by navArgs()
     private lateinit var navController : NavController
     private lateinit var tts: TextToSpeech
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentMealsBinding.inflate(inflater, container, false)
+    ): View {
+        _binding = FragmentAlarmTypeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         navController = Navigation.findNavController(view)
         tts = TextToSpeech(this.context, this)
 
-        binding.btnTwice.setOnClickListener(this)
-        binding.btnThreeTimes.setOnClickListener(this)
-
+        binding.btnForHours.setOnClickListener(this)
+        binding.btnMeals.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.btn_twice -> {
-                val action = MealsFragmentDirections.actionMealsFragmentToAlarmFragment(25,2, "알람 화면 입니다.")
+            R.id.btn_meals -> {
+                val action = AlarmTypeFragmentDirections.actionAlarmTypeFragmentToMealsFragment("1일 복용 횟수를 선택해주세요.")
                 navController.navigate(action)
             }
-            R.id.btn_three_times -> {
-                val action = MealsFragmentDirections.actionMealsFragmentToAlarmFragment(25,3,"알람 화면 입니다.")
+            R.id.btn_for_hours -> {
+                val action = AlarmTypeFragmentDirections.actionAlarmTypeFragmentToHoursFragment("알람 시간 간격을 선택해주세요.")
                 navController.navigate(action)
             }
         }
@@ -77,7 +72,5 @@ class MealsFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListe
         tts.shutdown()
         _binding = null
     }
-
-
 
 }

@@ -1,4 +1,4 @@
-package com.gdsc.medimedi.fragment.AlarmFragment
+package com.gdsc.medimedi.fragment.alarm
 
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
@@ -7,54 +7,71 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.NumberPicker
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.gdsc.medimedi.R
-import com.gdsc.medimedi.databinding.FragmentAlarmBinding
-import com.gdsc.medimedi.databinding.FragmentAlarmTypeBinding
+import com.gdsc.medimedi.databinding.FragmentHoursBinding
 import java.util.*
 
-class AlarmTypeFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListener {
-
-    private var _binding: FragmentAlarmTypeBinding? = null
+class HoursFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitListener {
+    private var _binding: FragmentHoursBinding? = null
     private val binding get() = _binding!!
-    private val args: AlarmTypeFragmentArgs by navArgs()
-
+    private val args: HoursFragmentArgs by navArgs()
     private lateinit var navController : NavController
     private lateinit var tts: TextToSpeech
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentAlarmTypeBinding.inflate(inflater, container, false)
+    ): View {
+        _binding = FragmentHoursBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         navController = Navigation.findNavController(view)
         tts = TextToSpeech(this.context, this)
 
-        binding.btnForHours.setOnClickListener(this)
-        binding.btnMeals.setOnClickListener(this)
-
+        binding.btnMake.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.btn_for_hours -> {
-                val action = AlarmTypeFragmentDirections.actionAlarmTypeFragmentToHoursFragment("알람이 반복될 시간을 골라주세요.")
+            R.id.btn_make -> {
+                val action = HoursFragmentDirections.actionHoursFragmentToAlarmFragment(
+                    binding.numHours.value,0, "알람 화면 입니다.")
                 navController.navigate(action)
             }
-            R.id.btn_meals -> {
-                val action = AlarmTypeFragmentDirections.actionAlarmTypeFragmentToMealsFragment("1일 복용 횟수를 골라주세요.")
-                navController.navigate(action)
-            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        initNumberPicker()
+        numberPickerListener()
+    }
+
+    // 넘버 피커 초기화
+    private fun initNumberPicker(){
+        val data: Array<String> = Array(24){
+                i -> i.toString()
+        }
+
+        binding.numHours.minValue = 0
+        binding.numHours.maxValue = data.size-1
+        binding.numHours.displayedValues = data
+        binding.numHours.wrapSelectorWheel = false
+        binding.numHours.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
+    }
+
+    // 넘버 피커 리스너
+    private fun numberPickerListener(){
+        binding.numHours.setOnValueChangedListener { picker, oldVal, newVal ->
+            Log.d("test", "oldVal : ${oldVal}, newVal : $newVal")
+            Log.d("test", "picker.displayedValues ${picker.displayedValues[picker.value]}")
         }
     }
 
@@ -79,5 +96,4 @@ class AlarmTypeFragment : Fragment(), View.OnClickListener, TextToSpeech.OnInitL
         tts.shutdown()
         _binding = null
     }
-
 }

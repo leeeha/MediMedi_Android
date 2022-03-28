@@ -1,6 +1,5 @@
 package com.gdsc.medimedi.broadcastReceiver
 
-import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -15,15 +14,12 @@ import androidx.core.app.NotificationCompat
 import com.gdsc.medimedi.R
 import com.gdsc.medimedi.broadcastReceiver.Data.Companion.CHANNEL_ID
 import com.gdsc.medimedi.broadcastReceiver.Data.Companion.NOTIFICATION_ID
-import com.gdsc.medimedi.fragment.AlarmFragment.AlarmFragment
-import java.util.*
-
+import com.gdsc.medimedi.fragment.alarm.AlarmFragment
 
 class Data{
     companion object{
         var NOTIFICATION_ID = 0
         var CHANNEL_ID = "medimedi_channel"
-
         var curAlarm = "None"
     }
 }
@@ -44,11 +40,11 @@ class MyReceiver : BroadcastReceiver() {
 
     lateinit var notificationManager: NotificationManager
 
-
     override fun onReceive(context: Context, intent: Intent) {
         Log.d(ContentValues.TAG, "Received intent : $intent")
-        if (intent.action == "android.intent.action.BOOT_COMPLETED") {
-            // Register alarm
+        if(intent.action == "android.intent.action.BOOT_COMPLETED") {
+            // todo: Register alarm
+
         }
         notificationManager = context.getSystemService(
             Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -58,7 +54,7 @@ class MyReceiver : BroadcastReceiver() {
     }
 
     // Notification 을 띄우기 위한 Channel 등록
-    fun createNotificationChannel(){
+    private fun createNotificationChannel(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(
                 CHANNEL_ID, // 채널의 아이디
