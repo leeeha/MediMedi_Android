@@ -78,7 +78,7 @@ From [GDSC Seoultech](https://gdsc-seoultech.github.io/)
     <a href="https://github.com/leeeha"><img src="https://avatars.githubusercontent.com/u/68090939?v=4" width="150px;" alt="Haeun Lee"/><br /><sub><b>Haeun Lee</b></sub></a><br />
     </td>
      <td align="center">
-        <a href="https://github.com/yoon-H"><img src="https://avatars.githubusercontent.com/u/71068767?v=4" width="150px" alt="Yunjae Ha"/><br /><sub><b>Yunjae Ha</b></sub></a>
+        <a href="https://github.com/yoon-H"><img src="https://avatars.githubusercontent.com/u/71068767?v=4" width="150px" alt="Yunjae Han"/><br /><sub><b>Yunjae Han</b></sub></a>
      </td>
      <td align="center">
         <a href="https://github.com/twinklesu"><img src="https://avatars.githubusercontent.com/u/68603692?v=4" width="150px" alt="Subin Park"/><br /><sub><b>Subin Park</b></sub></a>
