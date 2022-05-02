@@ -1,4 +1,4 @@
-package com.gdsc.medimedi.fragment.AlarmFragment
+package com.gdsc.medimedi.fragment.alarm
 
 import android.app.AlarmManager
 import android.app.PendingIntent

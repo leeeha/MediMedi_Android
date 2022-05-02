@@ -119,7 +119,6 @@ class LoginFragment : Fragment(), TextToSpeech.OnInitListener {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.e("failed code=", e.statusCode.toString())
-
             updateUI(null)
         }
     }
@@ -131,25 +130,27 @@ class LoginFragment : Fragment(), TextToSpeech.OnInitListener {
 
         } else { // 로그인 성공 (서버에 유저 정보 보낸 뒤 홈화면으로 넘어가기)
             Log.e("SignIn", "Success")
+
+            // 서버에 유저 정보가 이미 등록되어 있는지 확인!
             checkRetrofit(account)
         }
     }
 
     private fun checkRetrofit(account: GoogleSignInAccount) {
-        mRESTApi.checkUserInfo(account?.idToken).enqueue(object : Callback<CheckResponse>{
+        mRESTApi.checkUserInfo(account.idToken).enqueue(object : Callback<CheckResponse>{
             override fun onResponse(call: Call<CheckResponse>, response: Response<CheckResponse>) {
-                if (response.isSuccessful){ //레트로핏 성공
+                if (response.isSuccessful){ // 레트로핏 성공
                     if (response.body()?.success == true){
-                        if (response.body()?.data?.is_joined == true){
-                            Log.e("Retrofit", "서버에 이미 회원가입함.")
-                        } else {
+                        if (response.body()?.data?.is_joined == false){
+                            Log.e("Retrofit", "서버에 유저 정보 없음.")
                             doRetrofit(account)
-                            Log.e("Retrofit", "서버에 정보가 없음.")
+                        } else {
+                            // 서버에 이미 등록된 정보가 있을 경우, 유저 정보 다시 전송 X
+                            Log.e("Retrofit", "서버에 유저 정보 있음.")
                         }
                     } else {
                         Log.e("Retrofit", "Fail")
                     }
-
                 }
             }
 

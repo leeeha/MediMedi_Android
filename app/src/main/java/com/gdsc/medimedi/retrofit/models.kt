@@ -21,7 +21,6 @@ data class CheckResponse(
     val data: Check
 )
 
-
 // 검색
 data class SearchRequest(
     val token: String?,
