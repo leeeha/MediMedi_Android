@@ -1,6 +1,6 @@
-![KakaoTalk_20220701_093330662](https://user-images.githubusercontent.com/68090939/176800229-099fa466-43c9-4516-90d6-8b1c51a657da.jpg)
-
 # 💊 2022 Solution Challenge: MediMedi 💊
+
+![KakaoTalk_20220701_093330662](https://user-images.githubusercontent.com/68090939/176800229-099fa466-43c9-4516-90d6-8b1c51a657da.jpg)
 
 ## Service Introduction
 This service is launced to solve [UN SGDs](https://sdgs.un.org/) **10. Reduced Inequalities**, especially a visual impairment. It is addressed to solve blind pill box distinguishing problem. Especially in the case of household medicines, they distinguished those pill boxes by remembering the shape of box and torn part. Currently, in South Korea, only few number of drugs marked with Braille. And even if Braille is written, it is faint or inaccurate, so that makes reading difficult.
