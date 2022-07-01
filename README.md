@@ -1,3 +1,5 @@
+![KakaoTalk_20220701_093330662](https://user-images.githubusercontent.com/68090939/176800229-099fa466-43c9-4516-90d6-8b1c51a657da.jpg)
+
 # 💊 2022 Solution Challenge: MediMedi 💊
 
 ## Service Introduction
